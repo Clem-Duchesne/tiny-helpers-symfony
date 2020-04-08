@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -30,6 +32,22 @@ class User
      * @ORM\Column(type="datetime")
      */
     private $created_at;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Tool", mappedBy="User")
+     */
+    private $tool;
+
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\Image", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $image;
+
+    public function __construct()
+    {
+        $this->tool = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -68,6 +86,46 @@ class User
     public function setCreatedAt(\DateTimeInterface $created_at): self
     {
         $this->created_at = $created_at;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Tool[]
+     */
+    public function getTool(): Collection
+    {
+        return $this->tool;
+    }
+
+    public function addTool(Tool $tool): self
+    {
+        if (!$this->tool->contains($tool)) {
+            $this->tool[] = $tool;
+            $tool->addUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTool(Tool $tool): self
+    {
+        if ($this->tool->contains($tool)) {
+            $this->tool->removeElement($tool);
+            $tool->removeUser($this);
+        }
+
+        return $this;
+    }
+
+    public function getImage(): ?Image
+    {
+        return $this->image;
+    }
+
+    public function setImage(Image $image): self
+    {
+        $this->image = $image;
 
         return $this;
     }
