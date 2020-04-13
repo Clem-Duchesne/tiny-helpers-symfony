@@ -36,7 +36,7 @@ class Image
         return $this->name;
     }
 
-    public function setName(string $name): self
+    public function setName(UploadedFile $name = null): self
     {
         $this->name = $name;
 
@@ -54,4 +54,5 @@ class Image
 
         return $this;
     }
+
 }

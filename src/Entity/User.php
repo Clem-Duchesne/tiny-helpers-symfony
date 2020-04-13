@@ -4,12 +4,13 @@ namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  */
-class User
+class User implements UserInterface
 {
     /**
      * @ORM\Id()
@@ -21,7 +22,7 @@ class User
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $pseudo;
+    private $username;
 
     /**
      * @ORM\Column(type="string", length=800)
@@ -41,8 +42,19 @@ class User
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\Image", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=false)
+     * * 
      */
     private $image;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $password;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $email;
 
     public function __construct()
     {
@@ -54,14 +66,14 @@ class User
         return $this->id;
     }
 
-    public function getPseudo(): ?string
+    public function getUsername(): ?string
     {
-        return $this->pseudo;
+        return $this->username;
     }
 
-    public function setPseudo(string $pseudo): self
+    public function setUsername(string $username): self
     {
-        $this->pseudo = $pseudo;
+        $this->username = $username;
 
         return $this;
     }
@@ -128,5 +140,43 @@ class User
         $this->image = $image;
 
         return $this;
+    }
+
+    public function getPassword(): ?string
+    {
+        return $this->password;
+    }
+
+    public function setPassword(string $password): self
+    {
+        $this->password = $password;
+
+        return $this;
+    }
+
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(string $email): self
+    {
+        $this->email = $email;
+
+        return $this;
+    }
+    public function getSalt()
+    {
+        // you *may* need a real salt depending on your encoder
+        // see section on salt below
+        return null;
+    }
+    public function getRoles()
+    {
+        return array('ROLE_USER');
+    }
+
+    public function eraseCredentials()
+    {
     }
 }
