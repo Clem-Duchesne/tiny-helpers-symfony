@@ -24,24 +24,19 @@ class Tool
     private $name;
 
     /**
-     * @ORM\Column(type="string", length=800)
+     * @ORM\Column(type="string", length=255)
      */
     private $link;
 
     /**
-     * @ORM\Column(type="string", length=1000)
+     * @ORM\Column(type="text")
      */
     private $description;
 
     /**
      * @ORM\Column(type="datetime")
      */
-    private $created_at;
-
-    /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\User", inversedBy="tool")
-     */
-    private $user;
+    private $createdAt;
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Category", inversedBy="tool")
@@ -49,15 +44,14 @@ class Tool
     private $category;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Image", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\ManyToMany(targetEntity="App\Entity\User", inversedBy="tool")
      */
-    private $image;
+    private $user;
 
     public function __construct()
     {
-        $this->user = new ArrayCollection();
         $this->category = new ArrayCollection();
+        $this->user = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -103,38 +97,12 @@ class Tool
 
     public function getCreatedAt(): ?\DateTimeInterface
     {
-        return $this->created_at;
+        return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeInterface $created_at): self
+    public function setCreatedAt(\DateTimeInterface $createdAt): self
     {
-        $this->created_at = $created_at;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|User[]
-     */
-    public function getUser(): Collection
-    {
-        return $this->user;
-    }
-
-    public function addUser(User $user): self
-    {
-        if (!$this->user->contains($user)) {
-            $this->user[] = $user;
-        }
-
-        return $this;
-    }
-
-    public function removeUser(User $user): self
-    {
-        if ($this->user->contains($user)) {
-            $this->user->removeElement($user);
-        }
+        $this->createdAt = $createdAt;
 
         return $this;
     }
@@ -165,14 +133,28 @@ class Tool
         return $this;
     }
 
-    public function getImage(): ?Image
+    /**
+     * @return Collection|User[]
+     */
+    public function getUser(): Collection
     {
-        return $this->image;
+        return $this->user;
     }
 
-    public function setImage(Image $image): self
+    public function addUser(User $user): self
     {
-        $this->image = $image;
+        if (!$this->user->contains($user)) {
+            $this->user[] = $user;
+        }
+
+        return $this;
+    }
+
+    public function removeUser(User $user): self
+    {
+        if ($this->user->contains($user)) {
+            $this->user->removeElement($user);
+        }
 
         return $this;
     }

@@ -1,4 +1,4 @@
-var inputPicture = document.getElementById("user_image");
+var inputPicture = document.getElementById("user_file");
 var image = document.getElementById("afterSelect");
 image.style.display = 'none';
 inputPicture.addEventListener("change", function readURL(e) {

@@ -6,18 +6,30 @@ use App\Form\UserType;
 use App\Entity\User;
 use App\Entity\Image;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Cocur\Slugify\Slugify;
 
 
 
 class UserController extends AbstractController
 {
+    /**
+     * Lister les utilisateurs.
+     *
+     * @Route("/user/show", name="user_show")
+     */
+    public function index(UserRepository $userRepository)
+    {
+        return $this->render('user/index.html.twig', [
+            'users' => $userRepository->findBy([], ['id' => 'DESC'])
+        ]);
+    }
     /**
      * Ajouter un utilisateur
      *
@@ -25,59 +37,61 @@ class UserController extends AbstractController
      */
     public function add(Request $request,EntityManagerInterface $em)
     {
-        // préparer un utilisateur
         $user = new User();
-        //$image = new Image();
-
-        // préparer l'objet formulaire
         $form = $this->createForm(UserType::class, $user);
-        // Récupérer (éventuellement) les données soumises
         $form->handleRequest($request);
-        // Si le formulaire a été soumis et que les données sont valides
+
         if ($form->isSubmitted() && $form->isValid()) {
-             
-             $image = $form->get('image')->getData();
-             if ($image) {
-                 $originalFilename = pathinfo($image->getClientOriginalName(), PATHINFO_FILENAME);
-                 // this is needed to safely include the file name as part of the URL
-                 $safeFilename = $slugger->slug($originalFilename);
-                 $newFilename = $safeFilename.'-'.uniqid().'.'.$image->guessExtension();
- 
-                 // Move the file to the directory where brochures are stored
-                 try {
-                     $brochureFile->move(
-                         $this->getParameter('img'),
-                         $newFilename
-                     );
-                 } catch (FileException $e) {
-                     return "error";
-                 }
- 
-                 $image->setImage($newFilename);
-             }
-        $user = $form->getData();
-        
-        
-        $em->persist($user);
-        $em->flush();
-        // stocker un message flash de succès
-        $this->addFlash('info', 'utilisateur ' . $user->getUsername() . ' ajouté');
-        // rediriger vers l’accueil
-        return $this->redirectToRoute('index');
+            /** @var UploadedFile $imageFile */
+            $imageFile = $form->get('file')->getData();
+
+            // this condition is needed because the 'brochure' field is not required
+            // so the PDF file must be processed only when a file is uploaded
+            if ($imageFile) {
+                $slugify = new Slugify();
+                $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
+                // this is needed to safely include the file name as part of the URL
+                $safeFilename = $slugify->slugify($originalFilename);
+                $newFilename = $safeFilename.'-'.uniqid().'.'.$imageFile->guessExtension();
+
+                // Move the file to the directory where brochures are stored
+                try {
+                    $imageFile->move(
+                        $this->getParameter('upload_dir'),
+                        $newFilename
+                    );
+                }
+                catch (FileException $e) {
+                    // ... handle exception if something happens during file upload
+                }
+
+                // updates the 'brochureFilename' property to store the PDF file name
+                // instead of its contents
+                $user->setImage($newFilename);
+            }
+            $user = $form->getData();
+            $em->persist($user);
+            $em->flush();
+
+            // ... persist the $user variable or any other work
+
+            return $this->redirect($this->generateUrl('index'));
         }
-        // formulaire non valide ou 1er acces : afficher le formulaire
+
         return $this->render('security/add.html.twig', [
-        'form' => $form->createView()
-        ]) ;
+            'form' => $form->createView(),
+        ]);
     }
+
+
     /**
      * @Route("/login", name="app_login")
      */
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
-        // if ($this->getUser()) {
-        //     return $this->redirectToRoute('target_path');
-        // }
+        if ($this->getUser()) {
+             return $this->redirectToRoute('index');
+        }
 
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
