@@ -121,3 +121,15 @@ li {
 .tool__link {
   padding: 2% 0;
 }
+
+/* Categories */
+.category {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  min-width: 80%;
+  padding: 2%;
+}
+.category__title {
+  text-align: center;
+}

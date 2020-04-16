@@ -5,6 +5,8 @@ namespace App\Controller;
 use App\Form\UserType;
 use App\Entity\User;
 use App\Entity\Image;
+use App\Entity\Category;
+use App\Repository\CategoryRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -24,10 +26,11 @@ class UserController extends AbstractController
      *
      * @Route("/user/show", name="user_show")
      */
-    public function index(UserRepository $userRepository)
+    public function index(UserRepository $userRepository, categoryRepository $categoryRepository)
     {
         return $this->render('user/index.html.twig', [
-            'users' => $userRepository->findBy([], ['id' => 'DESC'])
+            'users' => $userRepository->findBy([], ['id' => 'DESC']),
+            'categories' => $categoryRepository->findBy([], ['id' => 'DESC'])
         ]);
     }
     /**
@@ -35,7 +38,7 @@ class UserController extends AbstractController
      *
      * @Route("/user/add", name="user_add")
      */
-    public function add(Request $request,EntityManagerInterface $em)
+    public function add(Request $request,EntityManagerInterface $em, categoryRepository $categoryRepository)
     {
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
@@ -80,6 +83,7 @@ class UserController extends AbstractController
 
         return $this->render('security/add.html.twig', [
             'form' => $form->createView(),
+            'categories' => $categoryRepository->findBy([], ['id' => 'DESC'])
         ]);
     }
 
@@ -87,7 +91,7 @@ class UserController extends AbstractController
     /**
      * @Route("/login", name="app_login")
      */
-    public function login(AuthenticationUtils $authenticationUtils): Response
+    public function login(AuthenticationUtils $authenticationUtils, categoryRepository $categoryRepository): Response
     {
         if ($this->getUser()) {
              return $this->redirectToRoute('index');
@@ -98,14 +102,14 @@ class UserController extends AbstractController
         // last username entered by the user
         $lastUsername = $authenticationUtils->getLastUsername();
 
-        return $this->render('security/login.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
+        return $this->render('security/login.html.twig', ['last_username' => $lastUsername, 'error' => $error, 'categories' => $categoryRepository->findBy([], ['id' => 'DESC'])]);
     }
 
     /**
      * @Route("/logout", name="app_logout")
      */
     public function logout()
-    {
+    {   
         throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
     }
 }

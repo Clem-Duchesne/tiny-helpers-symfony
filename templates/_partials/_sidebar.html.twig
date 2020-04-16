@@ -1,15 +1,19 @@
 <nav class="sidebar">
     <a class="sidebar__link" href="#">Tiny Tools</a>
     <p class="sidebar__text">Une collection entièrement gratuite d'outils en ligne pour les développeurs...</p>
-    <a class="sidebar__connexion" href="{{ path('app_login') }}">Connexion <i class="las la-sign-in-alt"></i></a>
-    <a class="sidebar__connexion" href="{{ path('user_add') }}">Inscription<i class="las la-sign-in-alt"></i></a>
+    {% if is_granted('ROLE_USER') %}
+        <a class="sidebar__connexion" href="{{ path('category') }}">Liste des catégories</a>
+        <a class="sidebar__connexion" href="#">Liste de mes outils</a>
+        <a class="sidebar__connexion" href="{{ path('app_logout') }}">Déconnexion</a>
+    {% else %}
+        <a class="sidebar__connexion" href="{{ path('app_login') }}">Connexion <i class="las la-sign-in-alt"></i></a>
+        <a class="sidebar__connexion" href="{{ path('user_add') }}">Inscription<i class="las la-sign-in-alt"></i></a>
+    {% endif %}
     <h2 class="sidebar__title">Categories</h2>
     <ul class="sidebar__list">
         <li class="sidebar__item"><a href="#">Voir tout</a><span class="sidebar__number">196</span></li>
-        <li class="sidebar__item"><a href="#">Accessibilité</a><span class="sidebar__number">14</span></li>
-        <li class="sidebar__item"><a href="#">Animations</a><span class="sidebar__number">4</span></li>
-        <li class="sidebar__item"><a href="#">APIs</a><span class="sidebar__number">10</span></li>
-        <li class="sidebar__item"><a href="#">Code</a><span class="sidebar__number">20</span></li>
-        <li class="sidebar__item"><a href="#">Couleur</a><span class="sidebar__number">6</span></li>
+        {% for category in categories %}
+            <li class="sidebar__item"><a href="#">{{ category.name }}</a><span class="sidebar__number">14</span></li>
+        {% endfor %}
     </ul>
 </nav>
