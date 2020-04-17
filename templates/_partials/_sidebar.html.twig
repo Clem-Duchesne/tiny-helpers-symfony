@@ -3,7 +3,7 @@
     <p class="sidebar__text">Une collection entièrement gratuite d'outils en ligne pour les développeurs...</p>
     {% if is_granted('ROLE_USER') %}
         <a class="sidebar__connexion" href="{{ path('category') }}">Liste des catégories</a>
-        <a class="sidebar__connexion" href="#">Liste de mes outils</a>
+        <a class="sidebar__connexion" href="{{ path('tool') }}">Liste de mes outils</a>
         <a class="sidebar__connexion" href="{{ path('app_logout') }}">Déconnexion</a>
     {% else %}
         <a class="sidebar__connexion" href="{{ path('app_login') }}">Connexion <i class="las la-sign-in-alt"></i></a>

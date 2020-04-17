@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\HttpFoundation\File\File;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -47,6 +48,16 @@ class Tool
      * @ORM\ManyToMany(targetEntity="App\Entity\User", inversedBy="tool")
      */
     private $user;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $image;
+
+    /**
+     * @var File
+     */
+    private $file;
 
     public function __construct()
     {
@@ -106,6 +117,10 @@ class Tool
 
         return $this;
     }
+    public function dateToString()
+    {
+        return $this->createdAt->format('d/m/Y');
+    }
 
     /**
      * @return Collection|Category[]
@@ -155,6 +170,30 @@ class Tool
         if ($this->user->contains($user)) {
             $this->user->removeElement($user);
         }
+
+        return $this;
+    }
+
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function setImage(string $image): self
+    {
+        $this->image = $image;
+
+        return $this;
+    }
+
+    public function getFile(): ?File
+    {
+        return $this->file;
+    }
+
+    public function setFile(File $file): self
+    {
+        $this->file = $file;
 
         return $this;
     }

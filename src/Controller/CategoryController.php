@@ -28,7 +28,7 @@ class CategoryController extends AbstractController
      */
     public function add(Request $request,EntityManagerInterface $em, categoryRepository $categoryRepository)
     {
-        // préparer un article (vierge)
+        // préparer une catégorie (vierge)
         $category = new Category();
         $category->setCreatedAt( new \DateTime());
         // préparer l'objet formulaire
@@ -41,8 +41,6 @@ class CategoryController extends AbstractController
             $category = $form->getData();
             $em->persist($category);
             $em->flush();
-            // stocker un message flash de succès
-            //$this->addFlash('info', 'article  ' . $post->getTitle() . ' créé');
             // rediriger vers l’accueil
             return $this->redirectToRoute('index');
         }

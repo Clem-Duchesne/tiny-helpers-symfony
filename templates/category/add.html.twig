@@ -1,9 +1,9 @@
 {% extends 'base.html.twig' %}
-{% block title %}Ajouter un article{% endblock %}
+{% block title %}Ajouter une catégorie{% endblock %}
 
 {% block body %}
 <div class="container mt-4">
-<h1>Ajouter un article</h1>
+<h1>Ajouter une catégorie</h1>
 {{ form_start(form) }}
 <div class="row">
     <div class="col-md-6">
@@ -12,7 +12,7 @@
     </div>
 </div>
 <button class="btn btn-primary" formnovalidate>Enregistrer la catégorie</button>
-<a href="{{ path( 'backoffice_index' ) }}" class="">Annuler</a>
+<a href="{{ path( 'category' ) }}" class="">Annuler</a>
 {{ form_end(form) }}
 
 </div><!-- /.container -->

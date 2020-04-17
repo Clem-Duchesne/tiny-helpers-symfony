@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+{% block title %}Ajouter un outil{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+<h1>Ajouter un outil</h1>
+{{ form_start(form) }}
+<div>
+    <div>
+        {{ form_row(form.name) }}
+        {{ form_row(form.link) }}
+    </div>
+    <div>
+        {{ form_row(form.description) }}
+        {{ form_row(form.category) }}
+    </div>
+    <div>
+        {{ form_row(form.user) }}
+        {{ form_row(form.file) }}
+        <img id="afterSelect" src="" alt="your image" />
+    </div>
+</div>
+<button class="btn btn-primary" formnovalidate>Enregistrer</button>
+<a href="{{ path( 'tool' ) }}" class="">Annuler</a>
+{{ form_end(form) }}
+
+</div>
+{% endblock %}
+
+{% block js %}
+<script src="{{asset('assets/js/showPictureUpload.js')}}"></script>
+{% endblock %}

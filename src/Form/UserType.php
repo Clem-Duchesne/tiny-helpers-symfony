@@ -12,11 +12,6 @@ use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 
-
-
-
-
-
 class UserType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
