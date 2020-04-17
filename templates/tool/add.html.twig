@@ -2,28 +2,26 @@
 {% block title %}Ajouter un outil{% endblock %}
 
 {% block body %}
-<div class="container mt-4">
-<h1>Ajouter un outil</h1>
-{{ form_start(form) }}
-<div>
-    <div>
-        {{ form_row(form.name) }}
-        {{ form_row(form.link) }}
+<div class="container">
+    <h1 class="title">Ajouter un outil</h1>
+    <div class="form">
+        {{ form_start(form) }}
+        <div>
+            {{ form_row(form.name) }}
+            {{ form_row(form.link) }}
+            {{ form_row(form.description) }}
+        </div>
+        <div>
+            {{ form_row(form.category) }}
+            {{ form_row(form.user) }}
+            {{ form_row(form.file) }}
+        </div>
+        <button class="form__button" formnovalidate>Enregistrer</button>
+        {{ form_end(form) }}
+       
+        <a href="{{ path( 'tool' ) }}" class="back">Annuler</a>
     </div>
-    <div>
-        {{ form_row(form.description) }}
-        {{ form_row(form.category) }}
-    </div>
-    <div>
-        {{ form_row(form.user) }}
-        {{ form_row(form.file) }}
-        <img id="afterSelect" src="" alt="your image" />
-    </div>
-</div>
-<button class="btn btn-primary" formnovalidate>Enregistrer</button>
-<a href="{{ path( 'tool' ) }}" class="">Annuler</a>
-{{ form_end(form) }}
-
+     <img id="afterSelect" src="" alt="your image" />
 </div>
 {% endblock %}
 

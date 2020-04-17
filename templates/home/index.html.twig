@@ -4,34 +4,22 @@
 
 {% block body %}
 <div class="tools">
-    {#{%for tool in tools %}
+    {% for tool in tools %}
         <figure class="tools__tool tool">
-            <img src="{{ asset('assets/img/tool_1.png') }}">
+            <img src="{{ asset('assets/img/'~ tool.image) }}">
             <figcaption class="tool__informations">
-                <h2>{{tool.name}}</h2>
+                <h2>{{ tool.name }}</h2>
                 <ul class="tool__tagsList">
-                    <li class="tool__tag">Catégorie(s)</li>
-                    <li class="tool__tag">Catégorie(s)</li>
+                    {% for category in tool.category %}
+                    <li class="tool__tag">{{ category }}</li>
+                    {% endfor %}
                 </ul>
-                <p class="tool__description">{{tool.description}}</p>
-                <a class="tool__link" target="_blank" href="{{tool.link}}">Voir le site</a>
+                <p class="tool__description">{{ tool.description }}</p>
+                <a class="tool__link" target="_blank" href="{{ tool.link }}">Voir le site</a>
             </figcaption>
-            <div class="tool__date"><p>{{tool.created_at}}</p></div>
+            <div class="tool__date"><p>{{ tool.dateToString() }}</p></div>
         </figure>
-    {%endfor%}#}
-    <figure class="tools__tool tool">
-            <img src="{{ asset('assets/img/tool_1.png') }}">
-            <figcaption class="tool__informations">
-                <h2>Tool 1</h2>
-                <ul class="tool__tagsList">
-                    <li class="tool__tag">Catégorie(s)</li>
-                    <li class="tool__tag">Catégorie(s)</li>
-                </ul>
-                <p class="tool__description">Blop</p>
-                <a class="tool__link" target="_blank" href="#">Voir le site</a>
-            </figcaption>
-            <div class="tool__date"><p>Le 13/04/20</p></div>
-        </figure>
+    {% endfor %}
 
 </div>
 

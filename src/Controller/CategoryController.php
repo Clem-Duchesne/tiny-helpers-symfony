@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Entity\Tool;
+use App\Repository\ToolRepository;
 use App\Entity\Category;
 use App\Form\CategoryType;
 use App\Repository\CategoryRepository;
@@ -16,17 +18,18 @@ class CategoryController extends AbstractController
     /**
      * @Route("/category", name="category")
      */
-    public function index(categoryRepository $categoryRepository)
+    public function index(categoryRepository $categoryRepository, toolRepository $toolRepository)
     {
         return $this->render('category/index.html.twig',[
-            'categories' => $categoryRepository->findBy([], ['id' => 'DESC'])
+            'categories' => $categoryRepository->findBy([], ['id' => 'DESC']),
+            'tools' => $toolRepository->findBy([], ['id' => 'DESC'])
         ]);
     }
 
     /**
      * @Route("/category/add", name="category_add")
      */
-    public function add(Request $request,EntityManagerInterface $em, categoryRepository $categoryRepository)
+    public function add(Request $request,EntityManagerInterface $em, categoryRepository $categoryRepository,toolRepository $toolRepository)
     {
         // préparer une catégorie (vierge)
         $category = new Category();
@@ -48,7 +51,18 @@ class CategoryController extends AbstractController
         return $this->render('category/add.html.twig',
             [   'form' => $form->createView(),
                 'categories' => $categoryRepository->findBy([], ['id' => 'DESC']),
+                'tools' => $toolRepository->findBy([], ['id' => 'DESC'])
             ]
         ) ;
+    }
+
+    /**
+     * @Route("/category/{id}/delete", name="category_delete")
+     */
+    public function delete(Category $category, EntityManagerInterface $em)
+    {
+        $em->remove($category);
+        $em->flush();
+        return $this->redirectToRoute('category');
     }
 }

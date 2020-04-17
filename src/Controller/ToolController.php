@@ -33,7 +33,7 @@ class ToolController extends AbstractController
     /**
      * @Route("/tool/add", name="tool_add")
      */
-    public function add(Request $request,EntityManagerInterface $em, categoryRepository $categoryRepository)
+    public function add(Request $request,EntityManagerInterface $em, categoryRepository $categoryRepository, toolRepository $toolRepository)
     {
         $tool = new Tool();
         $tool->setCreatedAt( new \DateTime());
@@ -82,7 +82,18 @@ class ToolController extends AbstractController
         return $this->render('tool/add.html.twig',
             [   'form' => $form->createView(),
                 'categories' => $categoryRepository->findBy([], ['id' => 'DESC']),
+                'tools' => $toolRepository->findBy([], ['id' => 'DESC'])
             ]
         ) ;
+    }
+
+    /**
+     * @Route("/tool/{id}/delete", name="tool_delete")
+     */
+    public function delete(Tool $tool, EntityManagerInterface $em)
+    {
+        $em->remove($tool);
+        $em->flush();
+        return $this->redirectToRoute('tool');
     }
 }

@@ -6,6 +6,8 @@ use App\Form\UserType;
 use App\Entity\User;
 use App\Entity\Image;
 use App\Entity\Category;
+use App\Entity\Tool;
+use App\Repository\ToolRepository;
 use App\Repository\CategoryRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Repository\UserRepository;
@@ -38,7 +40,7 @@ class UserController extends AbstractController
      *
      * @Route("/user/add", name="user_add")
      */
-    public function add(Request $request,EntityManagerInterface $em, categoryRepository $categoryRepository)
+    public function add(Request $request,EntityManagerInterface $em, categoryRepository $categoryRepository, toolRepository $toolRepository)
     {
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
@@ -83,7 +85,8 @@ class UserController extends AbstractController
 
         return $this->render('security/add.html.twig', [
             'form' => $form->createView(),
-            'categories' => $categoryRepository->findBy([], ['id' => 'DESC'])
+            'categories' => $categoryRepository->findBy([], ['id' => 'DESC']),
+            'tools' => $toolRepository->findBy([], ['id' => 'DESC'])
         ]);
     }
 
@@ -91,7 +94,7 @@ class UserController extends AbstractController
     /**
      * @Route("/login", name="app_login")
      */
-    public function login(AuthenticationUtils $authenticationUtils, categoryRepository $categoryRepository): Response
+    public function login(AuthenticationUtils $authenticationUtils, categoryRepository $categoryRepository, toolRepository $toolRepository): Response
     {
         if ($this->getUser()) {
              return $this->redirectToRoute('index');
@@ -102,7 +105,7 @@ class UserController extends AbstractController
         // last username entered by the user
         $lastUsername = $authenticationUtils->getLastUsername();
 
-        return $this->render('security/login.html.twig', ['last_username' => $lastUsername, 'error' => $error, 'categories' => $categoryRepository->findBy([], ['id' => 'DESC'])]);
+        return $this->render('security/login.html.twig', ['last_username' => $lastUsername, 'error' => $error, 'categories' => $categoryRepository->findBy([], ['id' => 'DESC']),  'tools' => $toolRepository->findBy([], ['id' => 'DESC'])]);
     }
 
     /**

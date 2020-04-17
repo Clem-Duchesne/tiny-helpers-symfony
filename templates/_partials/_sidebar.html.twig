@@ -1,5 +1,5 @@
 <nav class="sidebar">
-    <a class="sidebar__link" href="#">Tiny Tools</a>
+    <a class="sidebar__link" href="{{ path('index') }}">Tiny Tools</a>
     <p class="sidebar__text">Une collection entièrement gratuite d'outils en ligne pour les développeurs...</p>
     {% if is_granted('ROLE_USER') %}
         <a class="sidebar__connexion" href="{{ path('category') }}">Liste des catégories</a>
@@ -11,9 +11,9 @@
     {% endif %}
     <h2 class="sidebar__title">Categories</h2>
     <ul class="sidebar__list">
-        <li class="sidebar__item"><a href="#">Voir tout</a><span class="sidebar__number">196</span></li>
+        <li class="sidebar__item"><a href="#">Voir tout</a><span class="sidebar__number">{{ tools|length }}</span></li>
         {% for category in categories %}
-            <li class="sidebar__item"><a href="#">{{ category.name }}</a><span class="sidebar__number">14</span></li>
+            <li class="sidebar__item"><a href="#">{{ category.name }}</a><span class="sidebar__number">{{ category.tool|length }}</span></li>
         {% endfor %}
     </ul>
 </nav>

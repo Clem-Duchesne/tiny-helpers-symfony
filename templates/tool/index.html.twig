@@ -4,24 +4,28 @@
 
 {% block body %}
 <div class="myTools">
-    <h1>Liste de mes outils <a href="{{ path('tool_add') }}"> + </a></h1>
+    <h1 class="title">Liste de mes outils <a href="{{ path('tool_add') }}"> + </a></h1>
     <div class="myTools__tools">
     {% for tool in tools %}
-       {# {% if tool.user == user.username %} #}
-        <figure class="tools__tool tool">
-            <img src="{{ asset('assets/img/'~ tool.image) }}">
-            <figcaption class="tool__informations">
-                <h2>{{ tool.name }}</h2>
-                <ul class="tool__tagsList">
-                    <li class="tool__tag">Catégorie(s)</li>
-                    <li class="tool__tag">Catégorie(s)</li>
-                </ul>
-                <p class="tool__description">{{ tool.description }}</p>
-                <a class="tool__link" target="_blank" href="{{ tool.link }}">Voir le site</a>
-            </figcaption>
-            <div class="tool__date"><p>{{ tool.dateToString() }}</p></div>
-        </figure>
-        {# {% endif %} #}
+        {% for user in tool.user %}
+            {% if user == app.user.username %}
+            <figure class="tools__tool tool">
+                <img src="{{ asset('assets/img/'~ tool.image) }}">
+                <figcaption class="tool__informations">
+                    <h2>{{ tool.name }}</h2>
+                    <ul class="tool__tagsList">
+                        {% for category in tool.category %}
+                        <li class="tool__tag">{{ category }}</li>
+                        {% endfor %}
+                    </ul>
+                    <p class="tool__description">{{ tool.description }}</p>
+                    <a class="tool__link" target="_blank" href="{{ tool.link }}">Voir le site</a>
+                </figcaption>
+                <div class="tool__date"><p>{{ tool.dateToString() }}</p></div>
+                <a href="{{ path('tool_delete', { id: tool.id }) }}"><i class="las la-times remove"></i></a>
+            </figure>
+            {% endif %}
+        {% endfor %}
     {% endfor %}
     </div>
 </div>

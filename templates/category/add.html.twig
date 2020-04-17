@@ -2,18 +2,17 @@
 {% block title %}Ajouter une catégorie{% endblock %}
 
 {% block body %}
-<div class="container mt-4">
-<h1>Ajouter une catégorie</h1>
-{{ form_start(form) }}
-<div class="row">
-    <div class="col-md-6">
+<div class="container">
+    <h1 class="title">Ajouter une catégorie</h1>
+    <div class="form">
+        {{ form_start(form) }}
         {{ form_row(form.name) }}
         {{ form_row(form.slug) }}
+        <button class="form__button" formnovalidate>Enregistrer la catégorie</button>
+        {{ form_end(form) }}
+        <a href="{{ path( 'category' ) }}" class="">Annuler</a>
     </div>
 </div>
-<button class="btn btn-primary" formnovalidate>Enregistrer la catégorie</button>
-<a href="{{ path( 'category' ) }}" class="">Annuler</a>
-{{ form_end(form) }}
 
-</div><!-- /.container -->
+
 {% endblock %}
