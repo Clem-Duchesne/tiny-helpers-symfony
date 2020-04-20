@@ -9,6 +9,7 @@ use Cocur\Slugify\Slugify;
 use App\Form\CategoryType;
 use App\Repository\ToolRepository;
 use App\Repository\CategoryRepository;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,11 +23,12 @@ class ToolController extends AbstractController
     /**
      * @Route("/tool", name="tool")
      */
-    public function index(categoryRepository $categoryRepository, toolRepository $toolRepository)
+    public function index(categoryRepository $categoryRepository, toolRepository $toolRepository, userRepository $userRepository)
     {
         return $this->render('tool/index.html.twig', [
             'categories' => $categoryRepository->findBy([], ['id' => 'DESC']),
-            'tools' => $toolRepository->findBy([], ['id' => 'DESC'])
+            'tools' => $toolRepository->findBy([], ['id' => 'DESC']),
+            'users' => $userRepository->findBy([], ['id' => 'DESC'])
         ]);
     }
 

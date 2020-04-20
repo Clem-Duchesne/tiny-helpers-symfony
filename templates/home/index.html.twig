@@ -4,23 +4,75 @@
 
 {% block body %}
 <div class="tools">
+{%if category_name == 'all'%}
     {% for tool in tools %}
+            <figure class="tools__tool tool">
+                <img src="{{ asset('assets/img/'~ tool.image) }}" class="tool__image">
+                <figcaption class="tool__informations">
+                    <h2>{{ tool.name }}</h2>
+                    <ul class="tool__tagsList">
+                        {% for category in tool.category %}
+                            <li class="tool__tag">{{ category }}</li>
+                        {% endfor %}
+                    </ul>
+                    <p class="tool__description">{{ tool.description }}</p> 
+                    {% if tool.user is not empty %}
+                    <h2 class="creators__intro">Créé par</h2>
+                    
+                    <div class="creators">
+                       
+                {%for tool_creator in tool.user %}
+                    {%for user in users %}
+                    {% if tool_creator == user %}
+                    <img src="{{ asset('assets/img/'~ user.image) }}" class="creators__image">
+                    {%endif%}
+                    {%endfor%}
+                {%endfor%}
+                {%endif%}
+                </div>
+                    <a class="tool__link" target="_blank" href="{{ tool.link }}">Voir <span>{{tool.name}}</span></a>
+                </figcaption>
+                <div class="tool__date"><p>{{ tool.dateToString() }}</p></div>
+            </figure>
+    {% endfor %}
+
+{%else%}
+    {% for tool in tools %}
+    
+        {% for category in tool.category %}
+        {%if category == category_name %}
         <figure class="tools__tool tool">
-            <img src="{{ asset('assets/img/'~ tool.image) }}">
+            <img src="{{ asset('assets/img/'~ tool.image) }}" class="tool__image">
             <figcaption class="tool__informations">
                 <h2>{{ tool.name }}</h2>
                 <ul class="tool__tagsList">
                     {% for category in tool.category %}
-                    <li class="tool__tag">{{ category }}</li>
+                        <li class="tool__tag">{{ category }}</li>
                     {% endfor %}
                 </ul>
                 <p class="tool__description">{{ tool.description }}</p>
-                <a class="tool__link" target="_blank" href="{{ tool.link }}">Voir le site</a>
+                {%if tool.user is not empty %}
+                <p class="tool__announce">Créé par</p>
+                
+                <div class="creators">    
+                {%for tool_creator in tool.user %}
+                    {%for user in users %}
+                    {% if tool_creator == user %}
+                    <img src="{{ asset('assets/img/'~ user.image) }}" class="creators__image">
+                {%endif%}
+                {%endfor%}
+                {%endfor%}
+                {%endif%}
+                </div>
+                <a class="tool__link" target="_blank" href="{{ tool.link }}">Voir <span>{{tool.name}}</span></a>
             </figcaption>
             <div class="tool__date"><p>{{ tool.dateToString() }}</p></div>
         </figure>
+        
+    {%endif%}
+    {%endfor%}
     {% endfor %}
-
+{%endif%}
 </div>
 
 

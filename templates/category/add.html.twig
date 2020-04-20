@@ -7,7 +7,6 @@
     <div class="form">
         {{ form_start(form) }}
         {{ form_row(form.name) }}
-        {{ form_row(form.slug) }}
         <button class="form__button" formnovalidate>Enregistrer la catégorie</button>
         {{ form_end(form) }}
         <a href="{{ path( 'category' ) }}" class="">Annuler</a>

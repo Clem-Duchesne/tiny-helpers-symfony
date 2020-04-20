@@ -3,13 +3,25 @@
 {% block title %}Liste des utilisateurs{% endblock %}
 
 {% block body %}
-<div class="users">
-    {%for user in users%}
-    <p>{{user.username}}</p>
-    {%endfor%}
-    
 
+<div class="myUsers">
+    <h1 class="user__title title">Liste des utilisateurs <a href="{{ path('user_add') }}"> + </a></h1>
+    <div class="users">
+    {% for user in users %}
+        <figure class="users__user user">
+                <img src="{{ asset('assets/img/'~ user.image) }}" class="user__image">
+                <figcaption class="user__informations">
+                    <h2 class="user__username">{{ user.username }}</h2>
+                    {%for role in user.roles %}
+                    <p class="user__role">{{role}}</p>
+                    {%endfor%}
+                    <a class="user__github" href="{{user.github}}">{{user.github}}</a>
+                    <a class="user__email" href="mailto:{{user.email}}">{{user.email}}</a>
+                </figcaption>
+                <div class="user__date"><p>{{ user.dateToString() }}</p></div>
+        </figure>
+    {% endfor %}
+    </div>
 </div>
-
-
 {% endblock %}
+

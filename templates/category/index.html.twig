@@ -3,11 +3,20 @@
 {% block title %}Liste des catégories{% endblock %}
 
 {% block body %}
-
+<div class="myCategories__categories">
+<h1 class="category__title  title">Liste des catégories <a href="{{ path('category_add') }}"> + </a></h1>
 <div class="category">
-    <h1 class="category__title">Liste des catégories <a href="{{ path('category_add') }}"> + </a></h1>
+
     {% for category in categories %}
-        <p class="category__item">- {{ category.name }}</p>
+        <div class="category__item">
+            <p> {{ category.name }}</p>
+            {%if is_granted('ROLE_ADMIN')%}
+                <a href="{{ path('category_delete', { id: category.id }) }}"><i class="las la-times remove remove_category"></i></a>
+            {%endif%}
+        </div>
+        
     {% endfor %}
+    
+</div>
 </div>
 {% endblock %}

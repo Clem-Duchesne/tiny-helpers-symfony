@@ -11,10 +11,12 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Cocur\Slugify\Slugify;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class CategoryController extends AbstractController
 {
+    
     /**
      * @Route("/category", name="category")
      */
@@ -42,6 +44,10 @@ class CategoryController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             // enregistrer les données dans la base
             $category = $form->getData();
+            $slugify = new Slugify();
+
+            $slug_category = $slugify->slugify($category);
+            $category->setSlug($slug_category);
             $em->persist($category);
             $em->flush();
             // rediriger vers l’accueil

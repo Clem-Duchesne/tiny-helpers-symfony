@@ -1,32 +1,86 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Liste de mes outils{% endblock %}
+{% block title %}Liste des outils{% endblock %}
 
 {% block body %}
 <div class="myTools">
-    <h1 class="title">Liste de mes outils <a href="{{ path('tool_add') }}"> + </a></h1>
+{% if is_granted('ROLE_ADMIN') %}
+    <h1 class="title">Liste des outils <a href="{{ path('tool_add') }}"> + </a></h1>
+    <div class="myTools__tools">
+    {% for tool in tools %}
+        
+            <figure class="tools__tool tool">
+                <img src="{{ asset('assets/img/'~ tool.image) }}" class="tool__image">
+                <figcaption class="tool__informations">
+                    <h2>{{ tool.name }}</h2>
+                    <ul class="tool__tagsList">
+                        {% for category in tool.category %}
+                            <li class="tool__tag">{{ category }}</li>
+                        {% endfor %}
+                    </ul>
+                    <p class="tool__description">{{ tool.description }}</p> 
+                    {%if tool.user is not empty %}
+                    <h2 class="creators__intro">Créé par</h2>
+                    <div class="creators">
+                       
+                {%for tool_creator in tool.user %}
+                    {%for user in users %}
+                    {% if tool_creator == user %}
+                    <img src="{{ asset('assets/img/'~ user.image) }}" class="creators__image">
+                {%endif%}
+                {%endfor%}
+                {%endfor%}
+                {%endif%}
+                </div>
+                    <a class="tool__link" target="_blank" href="{{ tool.link }}">Voir <span>{{tool.name}}</span></a>
+                </figcaption>
+                <a href="{{ path('tool_delete', { id: tool.id }) }}"><i class="las la-times remove remove_tool"></i></a>
+                <div class="tool__date"><p>{{ tool.dateToString() }}</p></div>
+            </figure>
+    {%endfor%}
+    
+    </div>
+
+{%else %}
+<h1 class="title">Liste de mes outils <a href="{{ path('tool_add') }}"> + </a></h1>
     <div class="myTools__tools">
     {% for tool in tools %}
         {% for user in tool.user %}
             {% if user == app.user.username %}
             <figure class="tools__tool tool">
-                <img src="{{ asset('assets/img/'~ tool.image) }}">
+                <img src="{{ asset('assets/img/'~ tool.image) }}" class="tool__image">
                 <figcaption class="tool__informations">
                     <h2>{{ tool.name }}</h2>
                     <ul class="tool__tagsList">
                         {% for category in tool.category %}
-                        <li class="tool__tag">{{ category }}</li>
+                            <li class="tool__tag">{{ category }}</li>
                         {% endfor %}
                     </ul>
-                    <p class="tool__description">{{ tool.description }}</p>
-                    <a class="tool__link" target="_blank" href="{{ tool.link }}">Voir le site</a>
+                    <p class="tool__description">{{ tool.description }}</p> 
+                    {% if tool.user is not empty %}
+                    <h2 class="creators__intro">Créé par</h2>
+                    <div class="creators">
+                       
+                {%for tool_creator in tool.user %}
+                    {%for user in users %}
+                    {% if tool_creator == user %}
+                    <img src="{{ asset('assets/img/'~ user.image) }}" class="creators__image">
+                {%endif%}
+                {%endfor%}
+                {%endfor%}
+                {%endif%}
+                </div>
+                    <a class="tool__link" target="_blank" href="{{ tool.link }}">Voir <span>{{tool.name}}</span></a>
                 </figcaption>
+                <a href="{{ path('tool_delete', { id: tool.id }) }}"><i class="las la-times remove remove_tool"></i></a>
                 <div class="tool__date"><p>{{ tool.dateToString() }}</p></div>
-                <a href="{{ path('tool_delete', { id: tool.id }) }}"><i class="las la-times remove"></i></a>
             </figure>
             {% endif %}
         {% endfor %}
     {% endfor %}
     </div>
-</div>
+    
+
+{%endif%}
+
 {% endblock %}

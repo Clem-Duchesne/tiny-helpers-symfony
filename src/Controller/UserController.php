@@ -26,13 +26,14 @@ class UserController extends AbstractController
     /**
      * Lister les utilisateurs.
      *
-     * @Route("/user/show", name="user_show")
+     * @Route("/user", name="user")
      */
-    public function index(UserRepository $userRepository, categoryRepository $categoryRepository)
+    public function index(UserRepository $userRepository, categoryRepository $categoryRepository, toolRepository $toolRepository)
     {
         return $this->render('user/index.html.twig', [
             'users' => $userRepository->findBy([], ['id' => 'DESC']),
-            'categories' => $categoryRepository->findBy([], ['id' => 'DESC'])
+            'categories' => $categoryRepository->findBy([], ['id' => 'DESC']),
+            'tools' => $toolRepository->findBy([], ['id' => 'DESC'])
         ]);
     }
     /**
@@ -74,6 +75,7 @@ class UserController extends AbstractController
                 // instead of its contents
                 $user->setImage($newFilename);
             }
+            $user->setRoles(['ROLE_USER']);
             $user = $form->getData();
             $em->persist($user);
             $em->flush();
@@ -99,7 +101,7 @@ class UserController extends AbstractController
         if ($this->getUser()) {
              return $this->redirectToRoute('index');
         }
-
+        
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
         // last username entered by the user

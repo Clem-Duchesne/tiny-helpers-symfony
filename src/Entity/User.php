@@ -39,7 +39,7 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $github_link;
+    private $github;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -106,7 +106,7 @@ class User implements UserInterface
     {
         $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
+        //$roles[] = 'ROLE_USER';
 
         return array_unique($roles);
     }
@@ -118,14 +118,14 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getGithubLink(): ?string
+    public function getGithub(): ?string
     {
-        return $this->github_link;
+        return $this->github;
     }
 
-    public function setGithubLink(string $github_link): self
+    public function setGithub(string $github): self
     {
-        $this->github_link = $github_link;
+        $this->github = $github;
 
         return $this;
     }
@@ -209,6 +209,11 @@ class User implements UserInterface
 
         return $this;
     }
+    public function dateToString()
+    {
+        return $this->createdAt->format('d/m/Y');
+    }
+
 
     /**
      * @return Collection|Tool[]
