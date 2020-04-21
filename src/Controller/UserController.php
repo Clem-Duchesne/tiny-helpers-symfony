@@ -26,7 +26,7 @@ class UserController extends AbstractController
     /**
      * Lister les utilisateurs.
      *
-     * @Route("/user", name="user")
+     * @Route("/users", name="user")
      */
     public function index(UserRepository $userRepository, categoryRepository $categoryRepository, toolRepository $toolRepository)
     {
@@ -89,6 +89,55 @@ class UserController extends AbstractController
             'form' => $form->createView(),
             'categories' => $categoryRepository->findBy([], ['id' => 'DESC']),
             'tools' => $toolRepository->findBy([], ['id' => 'DESC'])
+        ]);
+    }
+
+    /**
+     * Modifier le profil utilisateur.
+     *
+     * @Route("/user/{id}/edit", name="user_edit", methods={"GET","POST"})
+     */
+    public function update(Request $request, EntityManagerInterface $em, User $user,  categoryRepository $categoryRepository, toolRepository $toolRepository) : Response
+    {   
+        $form = $this->createForm(UserType::class, $user);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            /** @var UploadedFile $imageFile */
+            $imageFile = $form->get('file')->getData();
+            // this condition is needed because the 'brochure' field is not required
+            // so the PDF file must be processed only when a file is uploaded
+            if ($imageFile) {
+                $slugify = new Slugify();
+                $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
+                // this is needed to safely include the file name as part of the URL
+                $safeFilename = $slugify->slugify($originalFilename);
+                $newFilename = $safeFilename.'-'.uniqid().'.'.$imageFile->guessExtension();
+
+                // Move the file to the directory where brochures are stored
+                try {
+                    $imageFile->move(
+                        $this->getParameter('upload_dir'),
+                        $newFilename
+                    );
+                }
+                catch (FileException $e) {
+                    // ... handle exception if something happens during file upload
+                }
+                // updates the 'brochureFilename' property to store the PDF file name
+                // instead of its contents
+                $user->setImage($newFilename);
+            }
+            $this->getDoctrine()->getManager()->flush();
+
+            return $this->redirectToRoute('tool');
+        }
+
+        return $this->render('user/edit.html.twig', [
+            'form' => $form->createView(),
+            'categories' => $categoryRepository->findBy([], ['id' => 'DESC']),
+            'tools' => $toolRepository->findBy([], ['id' => 'DESC']),
+            'user' => $user
         ]);
     }
 

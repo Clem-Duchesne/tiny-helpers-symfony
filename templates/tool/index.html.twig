@@ -8,7 +8,6 @@
     <h1 class="title">Liste des outils <a href="{{ path('tool_add') }}"> + </a></h1>
     <div class="myTools__tools">
     {% for tool in tools %}
-        
             <figure class="tools__tool tool">
                 <img src="{{ asset('assets/img/'~ tool.image) }}" class="tool__image">
                 <figcaption class="tool__informations">
@@ -19,29 +18,29 @@
                         {% endfor %}
                     </ul>
                     <p class="tool__description">{{ tool.description }}</p> 
-                    {%if tool.user is not empty %}
+                    {% if tool.user is not empty %}
                     <h2 class="creators__intro">Créé par</h2>
                     <div class="creators">
-                       
-                {%for tool_creator in tool.user %}
-                    {%for user in users %}
-                    {% if tool_creator == user %}
-                    <img src="{{ asset('assets/img/'~ user.image) }}" class="creators__image">
-                {%endif%}
-                {%endfor%}
-                {%endfor%}
-                {%endif%}
+                        {% for tool_creator in tool.user %}
+                            {% for user in users %}
+                                {% if tool_creator == user %}
+                                <img src="{{ asset('assets/img/'~ user.image) }}" class="creators__image">
+                                {% endif %}
+                            {% endfor %}
+                        {% endfor %}
+                    {% endif %}
                 </div>
                     <a class="tool__link" target="_blank" href="{{ tool.link }}">Voir <span>{{tool.name}}</span></a>
                 </figcaption>
                 <a href="{{ path('tool_delete', { id: tool.id }) }}"><i class="las la-times remove remove_tool"></i></a>
+                <a href="{{ path('tool_edit', { id: tool.id }) }}"><i class="las la-edit edit edit_tool"></i></a>
                 <div class="tool__date"><p>{{ tool.dateToString() }}</p></div>
             </figure>
-    {%endfor%}
+    {% endfor %}
     
     </div>
 
-{%else %}
+{% else %}
 <h1 class="title">Liste de mes outils <a href="{{ path('tool_add') }}"> + </a></h1>
     <div class="myTools__tools">
     {% for tool in tools %}
@@ -60,19 +59,19 @@
                     {% if tool.user is not empty %}
                     <h2 class="creators__intro">Créé par</h2>
                     <div class="creators">
-                       
-                {%for tool_creator in tool.user %}
-                    {%for user in users %}
-                    {% if tool_creator == user %}
-                    <img src="{{ asset('assets/img/'~ user.image) }}" class="creators__image">
-                {%endif%}
-                {%endfor%}
-                {%endfor%}
-                {%endif%}
-                </div>
+                        {% for tool_creator in tool.user %}
+                            {% for user in users %}
+                                {% if tool_creator == user %}
+                                <img src="{{ asset('assets/img/'~ user.image) }}" class="creators__image">
+                                {% endif %}
+                            {% endfor %}
+                        {% endfor %}
+                    {% endif %}
+                    </div>
                     <a class="tool__link" target="_blank" href="{{ tool.link }}">Voir <span>{{tool.name}}</span></a>
                 </figcaption>
                 <a href="{{ path('tool_delete', { id: tool.id }) }}"><i class="las la-times remove remove_tool"></i></a>
+                <a href="{{ path('tool_edit', { id: tool.id }) }}"><i class="las la-edit edit edit_tool"></i></a>
                 <div class="tool__date"><p>{{ tool.dateToString() }}</p></div>
             </figure>
             {% endif %}
@@ -81,6 +80,6 @@
     </div>
     
 
-{%endif%}
+{% endif %}
 
 {% endblock %}

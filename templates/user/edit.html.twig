@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+{% block title %}Profil{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h1 class="title">Profil de {{ app.user.username }}</h1>
+    <div class="form">
+        {{ form_start(form) }}
+        <div class="hidden">
+            {{ form_row(form.username) }}
+        </div>
+        <div>
+            
+            {{ form_row(form.github) }}
+            {{ form_row(form.password, {'value': user.password }) }}
+        </div>
+        <div>
+            {{ form_row(form.email) }}
+            {{ form_row(form.file, {'required': false }) }}
+            <img id="afterSelect" src="" alt="your image" />
+            <img src="{{ asset('assets/img/'~ user.image ) }}" id="actual_img" alt="image actuelle"/>
+        </div>
+        <button class="form__button" formonvalidate >Enregistrer</button>
+        {{ form_end(form) }}
+       
+        <a href="{{ path( 'tool' ) }}" class="back">Annuler</a>
+    </div>
+     
+</div>
+{% endblock %}
+
+{% block js %}
+<script src="{{asset('assets/js/rescueurlToScreen.js')}}"></script>
+<script src="{{asset('assets/js/showPictureUpload.js')}}"></script>
+{% endblock %}

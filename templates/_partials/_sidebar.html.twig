@@ -4,13 +4,15 @@
     {% if is_granted('ROLE_USER') %}
         {% if is_granted('ROLE_ADMIN') %}
             <a class="sidebar__connexion" href="{{ path('user') }}">Liste des utilisateurs</a>
-        {% endif%}
+        {% endif %}
         <a class="sidebar__connexion" href="{{ path('category') }}">Liste des catégories</a>
         {% if is_granted('ROLE_ADMIN') %}
         <a class="sidebar__connexion" href="{{ path('tool') }}">Liste des outils</a>
+        <a class="sidebar__connexion" href="{{ path('user_edit', {'id': app.user.id}) }}">Liste des catégories</a>
         {% else %}
         <a class="sidebar__connexion" href="{{ path('tool') }}">Liste de mes outils</a>
-        {%endif%}
+        <a class="sidebar__connexion" href="{{ path('user_edit', {'id': app.user.id}) }}">Voir mon profil</a>
+        {% endif %}
         <a class="sidebar__connexion" href="{{ path('app_logout') }}">Déconnexion</a>
     {% else %}
         <a class="sidebar__connexion" href="{{ path('app_login') }}">Connexion <i class="las la-sign-in-alt"></i></a>

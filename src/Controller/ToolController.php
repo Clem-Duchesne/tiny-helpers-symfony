@@ -90,6 +90,57 @@ class ToolController extends AbstractController
     }
 
     /**
+     * Modifier un outil.
+     *
+     * @Route("/tool/{id}/edit", name="tool_edit", methods={"GET","POST"})
+     */
+    public function update(Request $request, EntityManagerInterface $em, Tool $tool,  categoryRepository $categoryRepository, toolRepository $toolRepository) : Response
+    {   
+        $form = $this->createForm(ToolType::class, $tool);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            /** @var UploadedFile $imageFile */
+            $imageFile = $form->get('file')->getData();
+
+            // this condition is needed because the 'brochure' field is not required
+            // so the PDF file must be processed only when a file is uploaded
+            if ($imageFile) {
+                $slugify = new Slugify();
+                $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
+                // this is needed to safely include the file name as part of the URL
+                $safeFilename = $slugify->slugify($originalFilename);
+                $newFilename = $safeFilename.'-'.uniqid().'.'.$imageFile->guessExtension();
+
+                // Move the file to the directory where brochures are stored
+                try {
+                    $imageFile->move(
+                        $this->getParameter('upload_dir'),
+                        $newFilename
+                    );
+                }
+                catch (FileException $e) {
+                    // ... handle exception if something happens during file upload
+                }
+
+                // updates the 'brochureFilename' property to store the PDF file name
+                // instead of its contents
+                $tool->setImage($newFilename);
+            }
+            $this->getDoctrine()->getManager()->flush();
+
+            return $this->redirectToRoute('tool');
+        }
+
+        return $this->render('tool/edit.html.twig', [
+            'form' => $form->createView(),
+            'categories' => $categoryRepository->findBy([], ['id' => 'DESC']),
+            'tools' => $toolRepository->findBy([], ['id' => 'DESC']),
+            'tool' => $tool
+        ]);
+    }
+
+    /**
      * @Route("/tool/{id}/delete", name="tool_delete")
      */
     public function delete(Tool $tool, EntityManagerInterface $em)

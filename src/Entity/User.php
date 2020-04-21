@@ -11,7 +11,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  */
-class User implements UserInterface
+class User implements UserInterface, \Serializable
 {
     /**
      * @ORM\Id()
@@ -241,5 +241,31 @@ class User implements UserInterface
         }
 
         return $this;
+    }
+
+    /**
+     *
+     * Serialize l'utilisateur pour le stocker en Session
+     */
+    public function serialize()
+    {
+        return serialize(array(
+            $this->id,
+            $this->username,
+            $this->password
+        ));
+    }
+
+    /**
+     *
+     * Permet de recharger l'utilisateur à partir de la session
+     */
+    public function unserialize($serialized)
+    {
+        list (
+            $this->id,
+            $this->username,
+            $this->password
+        ) = unserialize($serialized);
     }
 }

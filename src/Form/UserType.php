@@ -18,7 +18,7 @@ class UserType extends AbstractType
     {
         $builder
             ->add('username', TextType::class, ['label' => 'Votre identifiant'])
-            ->add('github_link', UrlType::class, ['label' => 'Votre lien github'])
+            ->add('github', UrlType::class, ['label' => 'Votre lien github'])
             ->add('password', PasswordType::class, ['label' => 'Votre mot de passe'])
             ->add('email', EmailType::class, ['label' => 'Votre email'])
             ->add('file', FileType::class, ['label' => 'Votre image', 'attr' => ['id'=>'file']])
