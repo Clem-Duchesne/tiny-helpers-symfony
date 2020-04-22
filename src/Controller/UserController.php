@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Service\Functions;
 use App\Form\UserType;
 use App\Entity\User;
 use App\Entity\Image;
@@ -41,7 +42,7 @@ class UserController extends AbstractController
      *
      * @Route("/user/add", name="user_add")
      */
-    public function add(Request $request,EntityManagerInterface $em, categoryRepository $categoryRepository, toolRepository $toolRepository)
+    public function add(Request $request,EntityManagerInterface $em, categoryRepository $categoryRepository, toolRepository $toolRepository, Functions $functions)
     {
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
@@ -66,6 +67,7 @@ class UserController extends AbstractController
                         $this->getParameter('upload_dir'),
                         $newFilename
                     );
+                    $functions->redimensionner_image( $this->getParameter('upload_dir') . '/' .$newFilename, 345);
                 }
                 catch (FileException $e) {
                     // ... handle exception if something happens during file upload
@@ -97,7 +99,7 @@ class UserController extends AbstractController
      *
      * @Route("/user/{id}/edit", name="user_edit", methods={"GET","POST"})
      */
-    public function update(Request $request, EntityManagerInterface $em, User $user,  categoryRepository $categoryRepository, toolRepository $toolRepository) : Response
+    public function update(Request $request, EntityManagerInterface $em, User $user,  categoryRepository $categoryRepository, toolRepository $toolRepository, Functions $functions) : Response
     {   
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
@@ -120,13 +122,16 @@ class UserController extends AbstractController
                         $this->getParameter('upload_dir'),
                         $newFilename
                     );
+                    $functions->redimensionner_image( $this->getParameter('upload_dir') . '/' .$newFilename, 345);
                 }
                 catch (FileException $e) {
                     // ... handle exception if something happens during file upload
                 }
                 // updates the 'brochureFilename' property to store the PDF file name
                 // instead of its contents
+                $oldImage = $user->getImage();
                 $user->setImage($newFilename);
+                $functions->deleteImage($oldImage);
             }
             $this->getDoctrine()->getManager()->flush();
 

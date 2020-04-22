@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Service\Functions;
 use App\Entity\Tool;
 use App\Form\ToolType;
 use App\Entity\Category;
@@ -34,7 +35,7 @@ class ToolController extends AbstractController
     /**
      * @Route("/tool/add", name="tool_add")
      */
-    public function add(Request $request,EntityManagerInterface $em, categoryRepository $categoryRepository, toolRepository $toolRepository)
+    public function add(Request $request,EntityManagerInterface $em, categoryRepository $categoryRepository, toolRepository $toolRepository, Functions $functions)
     {
         $tool = new Tool();
         $tool->setCreatedAt( new \DateTime());
@@ -63,6 +64,7 @@ class ToolController extends AbstractController
                         $this->getParameter('upload_dir'),
                         $newFilename
                     );
+                    $functions->redimensionner_image( $this->getParameter('upload_dir') . '/' .$newFilename, 345);
                 }
                 catch (FileException $e) {
                     // ... handle exception if something happens during file upload
@@ -93,7 +95,7 @@ class ToolController extends AbstractController
      *
      * @Route("/tool/{id}/edit", name="tool_edit", methods={"GET","POST"})
      */
-    public function update(Request $request, EntityManagerInterface $em, Tool $tool,  categoryRepository $categoryRepository, toolRepository $toolRepository) : Response
+    public function update(Request $request, EntityManagerInterface $em, Tool $tool,  categoryRepository $categoryRepository, toolRepository $toolRepository, Functions $functions) : Response
     {   
         $form = $this->createForm(ToolType::class, $tool);
         $form->handleRequest($request);
@@ -117,6 +119,7 @@ class ToolController extends AbstractController
                         $this->getParameter('upload_dir'),
                         $newFilename
                     );
+                    $functions->redimensionner_image( $this->getParameter('upload_dir') . '/' .$newFilename, 345);
                 }
                 catch (FileException $e) {
                     // ... handle exception if something happens during file upload
@@ -124,7 +127,9 @@ class ToolController extends AbstractController
 
                 // updates the 'brochureFilename' property to store the PDF file name
                 // instead of its contents
+                $oldImage = $tool->getImage();
                 $tool->setImage($newFilename);
+                $functions->deleteImage($oldImage);
             }
             $this->getDoctrine()->getManager()->flush();
 
@@ -142,7 +147,7 @@ class ToolController extends AbstractController
     /**
      * @Route("/tool/{id}/delete", name="tool_delete")
      */
-    public function delete(Tool $tool, EntityManagerInterface $em)
+    public function delete(Tool $tool, EntityManagerInterface $em, Functions $functions)
     {   
         $count = $tool->lengthUser();
         $user = $this->get('security.token_storage')->getToken()->getUser();
@@ -152,6 +157,8 @@ class ToolController extends AbstractController
             return $this->redirectToRoute('tool');
         }
         else{
+            $oldImage = $tool->getImage();
+            $functions->deleteImage($oldImage);
             $em->remove($tool);
             $em->flush();
             return $this->redirectToRoute('tool');
