@@ -81,11 +81,12 @@ li {
   font-size: 0.8rem;
   margin: 10% 0%;
 }
-.sidebar__connexion {
+.sidebar__option {
   color: var(--blue);
   font-weight: bold;
   display: flex;
   align-items: center;
+  margin-top: 10px;
 }
 .sidebar__connexion i {
   color: var(--blue);
@@ -127,7 +128,7 @@ li {
   display: flex;
   flex-direction: column;
   background: white;
-  margin-top: 2%;
+  margin-top: 5%;
 }
 .tool__date {
   position: absolute;

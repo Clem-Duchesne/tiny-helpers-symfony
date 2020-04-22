@@ -174,6 +174,11 @@ class Tool
         return $this;
     }
 
+    public function lengthUser()
+    {
+        return count($this->user);
+    }
+
     public function getImage(): ?string
     {
         return $this->image;

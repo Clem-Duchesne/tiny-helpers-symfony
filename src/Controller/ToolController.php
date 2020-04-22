@@ -17,7 +17,6 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-
 class ToolController extends AbstractController
 {
     /**
@@ -144,9 +143,19 @@ class ToolController extends AbstractController
      * @Route("/tool/{id}/delete", name="tool_delete")
      */
     public function delete(Tool $tool, EntityManagerInterface $em)
-    {
-        $em->remove($tool);
-        $em->flush();
-        return $this->redirectToRoute('tool');
+    {   
+        $count = $tool->lengthUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        if($count > 1){
+            $tool->removeUser($user);
+            $em->flush();
+            return $this->redirectToRoute('tool');
+        }
+        else{
+            $em->remove($tool);
+            $em->flush();
+            return $this->redirectToRoute('tool');
+        }
     }
+       
 }

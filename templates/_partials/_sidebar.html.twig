@@ -3,20 +3,20 @@
     <p class="sidebar__text">Une collection entièrement gratuite d'outils en ligne pour les développeurs...</p>
     {% if is_granted('ROLE_USER') %}
         {% if is_granted('ROLE_ADMIN') %}
-            <a class="sidebar__connexion" href="{{ path('user') }}">Liste des utilisateurs</a>
+            <a class="sidebar__option" href="{{ path('user') }}">Liste des utilisateurs</a>
         {% endif %}
-        <a class="sidebar__connexion" href="{{ path('category') }}">Liste des catégories</a>
+        <a class="sidebar__option" href="{{ path('category') }}">Liste des catégories</a>
         {% if is_granted('ROLE_ADMIN') %}
-        <a class="sidebar__connexion" href="{{ path('tool') }}">Liste des outils</a>
-        <a class="sidebar__connexion" href="{{ path('user_edit', {'id': app.user.id}) }}">Liste des catégories</a>
+        <a class="sidebar__option" href="{{ path('tool') }}">Liste des outils</a>
+        <a class="sidebar__option" href="{{ path('user_edit', {'id': app.user.id}) }}">Liste des catégories</a>
         {% else %}
-        <a class="sidebar__connexion" href="{{ path('tool') }}">Liste de mes outils</a>
-        <a class="sidebar__connexion" href="{{ path('user_edit', {'id': app.user.id}) }}">Voir mon profil</a>
+        <a class="sidebar__option" href="{{ path('tool') }}">Liste de mes outils</a>
+        <a class="sidebar__option" href="{{ path('user_edit', {'id': app.user.id}) }}">Voir mon profil</a>
         {% endif %}
-        <a class="sidebar__connexion" href="{{ path('app_logout') }}">Déconnexion</a>
+        <a class="sidebar__option" href="{{ path('app_logout') }}">Déconnexion</a>
     {% else %}
-        <a class="sidebar__connexion" href="{{ path('app_login') }}">Connexion <i class="las la-sign-in-alt"></i></a>
-        <a class="sidebar__connexion" href="{{ path('user_add') }}">Inscription<i class="las la-sign-in-alt"></i></a>
+        <a class="sidebar__option" href="{{ path('app_login') }}">Connexion <i class="las la-sign-in-alt"></i></a>
+        <a class="sidebar__option" href="{{ path('user_add') }}">Inscription<i class="las la-sign-in-alt"></i></a>
     {% endif %}
     <h2 class="sidebar__title">Categories</h2>
     <ul class="sidebar__list">
