@@ -64,7 +64,7 @@ class ToolController extends AbstractController
                         $this->getParameter('upload_dir'),
                         $newFilename
                     );
-                    $functions->redimensionner_image( $this->getParameter('upload_dir') . '/' .$newFilename, 345);
+                    $functions->redimensionner_image( $this->getParameter('upload_dir') . '/' . $newFilename, 345);
                 }
                 catch (FileException $e) {
                     // ... handle exception if something happens during file upload
@@ -73,6 +73,27 @@ class ToolController extends AbstractController
                 // updates the 'brochureFilename' property to store the PDF file name
                 // instead of its contents
                 $tool->setImage($newFilename);
+            }
+            else{
+                $fileName = $form->get('name')->getData();
+                $url = $form->get('link')->getData();
+                $arrContextOptions=array(
+                    "ssl"=>array(
+                        "cafile" => "../config/cacert.pem",
+                        "verify_peer"=> true,
+                        "verify_peer_name"=> true,
+                    ),
+                );
+
+                $params = http_build_query(array(
+                    "access_key" => "6146018387b84ac9abcd7b565241cf31",
+                    "url" => $url
+                ));
+                
+                $image_data = file_get_contents("https://api.apiflash.com/v1/urltoimage?" . $params, false, stream_context_create($arrContextOptions));
+                file_put_contents($this->getParameter('upload_dir') . '/' . $fileName, $image_data);
+                $functions->redimensionner_image( $this->getParameter('upload_dir') . '/' . $fileName, 345);
+                $tool->setImage($fileName);
             }
             // enregistrer les données dans la base
             $tool = $form->getData();
@@ -97,12 +118,15 @@ class ToolController extends AbstractController
      */
     public function update(Request $request, EntityManagerInterface $em, Tool $tool,  categoryRepository $categoryRepository, toolRepository $toolRepository, Functions $functions) : Response
     {   
+        $oldUrl = $tool->getLink();
         $form = $this->createForm(ToolType::class, $tool);
         $form->handleRequest($request);
-
+        
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var UploadedFile $imageFile */
+           
             $imageFile = $form->get('file')->getData();
+            $url = $form->get('link')->getData();
 
             // this condition is needed because the 'brochure' field is not required
             // so the PDF file must be processed only when a file is uploaded
@@ -124,15 +148,34 @@ class ToolController extends AbstractController
                 catch (FileException $e) {
                     // ... handle exception if something happens during file upload
                 }
-
                 // updates the 'brochureFilename' property to store the PDF file name
                 // instead of its contents
                 $oldImage = $tool->getImage();
                 $tool->setImage($newFilename);
                 $functions->deleteImage($oldImage);
             }
-            $this->getDoctrine()->getManager()->flush();
+            //dd($url . '               ' . $oldUrl);
+            elseif($url != $oldUrl){
+                $fileName = $form->get('name')->getData() . '.jpeg';
+                $arrContextOptions=array(
+                    "ssl"=>array(
+                        "cafile" => "../config/cacert.pem",
+                        "verify_peer"=> true,
+                        "verify_peer_name"=> true,
+                    ),
+                );
 
+                $params = http_build_query(array(
+                    "access_key" => "6146018387b84ac9abcd7b565241cf31",
+                    "url" => $url
+                ));
+                
+                $image_data = file_get_contents("https://api.apiflash.com/v1/urltoimage?" . $params, false, stream_context_create($arrContextOptions));
+                file_put_contents($this->getParameter('upload_dir') . '/' . $fileName, $image_data);
+                $functions->redimensionner_image( $this->getParameter('upload_dir') . '/' . $fileName, 345);
+                $tool->setImage($fileName);
+            }
+            $this->getDoctrine()->getManager()->flush();
             return $this->redirectToRoute('tool');
         }
 

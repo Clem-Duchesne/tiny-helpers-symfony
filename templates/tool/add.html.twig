@@ -7,14 +7,14 @@
     <div class="form">
         {{ form_start(form) }}
         <div>
-            {{ form_row(form.name) }}
+            {{ form_row(form.name, { 'label': 'Nom' }) }}
             {{ form_row(form.link) }}
             {{ form_row(form.description) }}
         </div>
         <div>
-            {{ form_row(form.category) }}
-            {{ form_row(form.user) }}
-            {{ form_row(form.file) }}
+            {{ form_row(form.category, { 'label': 'Catégorie(s)' }) }}
+            {{ form_row(form.user, { 'label': 'Créateur(s)' }) }}
+            {{ form_row(form.file, {'required': false }) }}
             <img id="afterSelect" src="" alt="your image" />
         </div>
         <button class="form__button" formonvalidate>Enregistrer</button>

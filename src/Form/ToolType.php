@@ -18,7 +18,7 @@ class ToolType extends AbstractType
             ->add('name')
             ->add('link',  UrlType::class, ['label' => 'Lien du site'])
             ->add('description')
-            ->add('file', FileType::class, ['label' => 'Image du site', 'attr' => ['id'=>'file']])
+            ->add('file', FileType::class, ['label' => 'Image du site (non obligatoire)', 'attr' => ['id'=>'file']])
             ->add('category')
             ->add('user')
         ;
