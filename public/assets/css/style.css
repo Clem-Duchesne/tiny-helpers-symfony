@@ -325,23 +325,25 @@ li {
 .form textarea {
   border: 1px solid var(--blue);
 }
+.form div.buttons{
+  display: flex;
+  justify-content: space-evenly;
+  flex-direction: row;
+  align-items: center;
+  margin-top: 10%;
+}
 .form__button {
-  border: 1px solid var(--blue);
+  
   color: var(--blue);
-  padding: 3%;
+  padding: 10px;
   font-size: 1em;
+  border: 1px solid var(--blue);
+
 }
 .back
 {
   font-size: 1em;
- 
-}
-.form div.buttons{
-  display: flex;
-  justify-content: space-around;
-  flex-direction: row;
-  align-items: center;
-  margin-top: 10%;
+  display: block;
 }
 .form div.image{
   display: flex;
