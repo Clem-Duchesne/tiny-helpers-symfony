@@ -3,13 +3,17 @@
 
 {% block body %}
 <div class="container">
-    <h1 class="title">Ajouter une catégorie</h1>
+    
     <div class="form">
+        <h1 class="title">Ajouter une catégorie</h1>
         {{ form_start(form) }}
         {{ form_row(form.name) }}
-        <button class="form__button" formnovalidate>Enregistrer la catégorie</button>
+        <div class="buttons">
+            <button class="form__button">Enregistrer</button>
+            <a href="{{ path( 'index' ) }}" class="back">Annuler</a>
+        </div>
         {{ form_end(form) }}
-        <a href="{{ path( 'category' ) }}" class="">Annuler</a>
+       
     </div>
 </div>
 

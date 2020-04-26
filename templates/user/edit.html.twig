@@ -3,8 +3,8 @@
 
 {% block body %}
 <div class="container">
-    <h1 class="title">Profil de {{ app.user.username }}</h1>
     <div class="form">
+        <h1 class="title"><i class="las la-user"></i> Profil de {{ app.user.username }} </h1>
         {{ form_start(form) }}
         <div class="hidden">
             {{ form_row(form.username) }}
@@ -20,10 +20,11 @@
             <img id="afterSelect" src="" alt="your image" />
             <img src="{{ asset('assets/img/'~ user.image ) }}" id="actual_img" alt="image actuelle"/>
         </div>
-        <button class="form__button" formonvalidate >Enregistrer</button>
+        <div class="buttons">
+            <button class="form__button" formonvalidate>Enregistrer</button>
+            <a href="{{ path( 'tool' ) }}" class="back">Annuler</a>
+        </div>
         {{ form_end(form) }}
-       
-        <a href="{{ path( 'tool' ) }}" class="back">Annuler</a>
     </div>
      
 </div>

@@ -24,7 +24,7 @@
                 {%for tool_creator in tool.user %}
                     {%for user in users %}
                     {% if tool_creator == user %}
-                    <img src="{{ asset('assets/img/'~ user.image) }}" class="creators__image">
+                    <a href="{{user.github}}"><img src="{{ asset('assets/img/'~ user.image) }}" class="creators__image"></a>
                     {%endif%}
                     {%endfor%}
                 {%endfor%}
@@ -58,7 +58,7 @@
                 {%for tool_creator in tool.user %}
                     {%for user in users %}
                     {% if tool_creator == user %}
-                    <img src="{{ asset('assets/img/'~ user.image) }}" class="creators__image">
+                    <a href="{{user.github}}"><img src="{{ asset('assets/img/'~ user.image) }}" class="creators__image"></a>
                 {%endif%}
                 {%endfor%}
                 {%endfor%}

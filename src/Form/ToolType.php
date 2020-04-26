@@ -9,6 +9,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class ToolType extends AbstractType
 {
@@ -18,10 +19,14 @@ class ToolType extends AbstractType
             ->add('name')
             ->add('link',  UrlType::class, ['label' => 'Lien du site'])
             ->add('description')
-            ->add('file', FileType::class, ['label' => 'Image du site (non obligatoire)', 'attr' => ['id'=>'file']])
-            ->add('category')
+            ->add('file', FileType::class, ['label' => 'Image (non obligatoire)', 'label_attr' => ['class' => 'file__label'], 'attr' => ['id'=>'file', 'class' => 'file']])
+            ->add('category', null, ['required' => true])
             ->add('user')
+            
+
+            
         ;
+        
     }
 
     public function configureOptions(OptionsResolver $resolver)

@@ -2,6 +2,9 @@
 
 namespace App\Service;
 
+use Cocur\Slugify\Slugify;
+
+
 class Functions
 {
     /** Fonction pour supprimer les anciennes images **/
@@ -15,7 +18,12 @@ class Functions
             unlink('../public/assets/img/' . $img);      
         }
     }
-
+    /** Fonction d'encryptage des mdp */
+    function encrypt($password){
+        $pwd = password_hash($password, PASSWORD_BCRYPT);
+        return $pwd;
+      }
+ 
 
     /** Fonction pour redimensionner les images **/
     function redimensionner_image($fichier, $nouvelle_taille) {
@@ -75,6 +83,25 @@ class Functions
 
             }
         }
+    }
+       /** Fonction d'ajout d'image */
+       function addImage($imageFile, $uploadDir){
+        $slugify = new Slugify();
+        $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
+        // this is needed to safely include the file name as part of the URL
+        $safeFilename = $slugify->slugify($originalFilename);
+        $newFilename = $safeFilename.'-'.uniqid().'.'.$imageFile->guessExtension();
+
+        // Move the file to the directory where brochures are stored
+        try {
+            $imageFile->move($uploadDir,$newFilename);
+
+            $this->redimensionner_image( $uploadDir . '/' .$newFilename, 345);
+        }
+        catch (FileException $e) {
+            // ... handle exception if something happens during file upload
+        }
+        return $newFilename;
     }
 }
 

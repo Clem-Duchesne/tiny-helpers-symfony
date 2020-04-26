@@ -1,16 +1,24 @@
 {% extends 'base.html.twig' %}
 {% block title %}Inscription{% endblock %}
 {% block body %}
-<div class="form">
- <h1>Inscription</h1>
-{{ form_start(form) }}
-{{ form_errors(form) }}
-{{ form_widget(form) }}
-{{ form_row(form.file) }}
-<img id="afterSelect" src="" alt="your image" />
-<button class="form__button">S'inscrire</button>
-{{ form_end(form) }}
- <a href="{{ path( 'index' ) }}" class="back">Annuler</a>
+<div class="container">
+    <div class="form">
+    
+        <h1 class="title">Inscription</h1>
+        <p class="error">{{message}}</p>
+        {{ form_start(form) }}
+        {{ form_errors(form) }}
+        {{ form_widget(form) }}
+        <div class="image">
+            {{ form_row(form.file) }}
+            <img id="afterSelect" src="" alt="your image" />
+        </div>
+        <div class="buttons">
+            <button class="form__button">S'inscrire</button>
+            <a href="{{ path( 'index' ) }}" class="back">Annuler</a>
+        </div>
+        {{ form_end(form) }}
+    </div>
 </div>
 {% endblock %}
 {% block js %}

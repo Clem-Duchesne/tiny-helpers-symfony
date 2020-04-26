@@ -18,6 +18,7 @@ use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\Security\Guard\Authenticator\AbstractFormLoginAuthenticator;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
 
+
 class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
 {
     use TargetPathTrait;
@@ -64,20 +65,28 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
         }
 
         $user = $this->entityManager->getRepository(User::class)->findOneBy(['username' => $credentials['username']]);
-        $password = $this->entityManager->getRepository(User::class)->findOneBy(['password' => $credentials['password']]);
+        $password = $user->getPassword();
+        if(password_verify($credentials['password'], $password)){
+            return $user;
+        }
+    
+    
+
+        
 
         if (!$user || !$password) {
             // fail authentication with a custom error
             throw new CustomUserMessageAuthenticationException('Username could not be found.');
         }
 
-        return $user;
+        
     }
 
     public function checkCredentials($credentials, UserInterface $user)
     {
         // Check the user's password or other credentials and return true or false
         // If there are no credentials to check, you can just return true
+
         return true;
     }
 

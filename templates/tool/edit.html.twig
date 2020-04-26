@@ -3,8 +3,8 @@
 
 {% block body %}
 <div class="container">
-    <h1 class="title">Modifier un outil</h1>
     <div class="form">
+        <h1 class="title">Modifier un outil</h1>
         {{ form_start(form) }}
         <div>
             {{ form_row(form.name) }}
@@ -18,10 +18,12 @@
             <img id="afterSelect" src="" alt="your image" />
             <img src="{{ asset('assets/img/'~ tool.image ) }}" id="actual_img" alt="image actuelle"/>
         </div>
-        <button class="form__button" formonvalidate >Enregistrer</button>
-        {{ form_end(form) }}
-       
+        <div class="buttons">
+        <button class="form__button" formonvalidate>Mettre à jour</button>
         <a href="{{ path( 'tool' ) }}" class="back">Annuler</a>
+        </div> 
+        {{ form_end(form) }}
+        <input type="hidden" id="session" value="{{session}}">
     </div>
      
 </div>
@@ -30,4 +32,5 @@
 {% block js %}
 <script src="{{asset('assets/js/rescueurlToScreen.js')}}"></script>
 <script src="{{asset('assets/js/showPictureUpload.js')}}"></script>
+<script src="{{asset('assets/js/eraseUserLogged.js')}}"></script>
 {% endblock %}

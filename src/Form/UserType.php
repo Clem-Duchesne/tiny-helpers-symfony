@@ -21,7 +21,7 @@ class UserType extends AbstractType
             ->add('github', UrlType::class, ['label' => 'Votre lien github'])
             ->add('password', PasswordType::class, ['label' => 'Votre mot de passe'])
             ->add('email', EmailType::class, ['label' => 'Votre email'])
-            ->add('file', FileType::class, ['label' => 'Votre image', 'attr' => ['id'=>'file']])
+            ->add('file', FileType::class, ['label' => 'Votre image', 'label_attr' => ['class' => 'file__label'], 'attr' => ['id'=>'file', 'class' => 'file']])
         ;
     }
 

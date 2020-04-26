@@ -3,8 +3,8 @@
 
 {% block body %}
 <div class="container">
-    <h1 class="title">Ajouter un outil</h1>
     <div class="form">
+        <h1 class="title">Ajouter un outil</h1>
         {{ form_start(form) }}
         <div>
             {{ form_row(form.name, { 'label': 'Nom' }) }}
@@ -13,20 +13,23 @@
         </div>
         <div>
             {{ form_row(form.category, { 'label': 'Catégorie(s)' }) }}
-            {{ form_row(form.user, { 'label': 'Créateur(s)' }) }}
-            {{ form_row(form.file, {'required': false }) }}
-            <img id="afterSelect" src="" alt="your image" />
+            {{ form_row(form.user, { 'label': 'Vos collaborateurs (non obligatoire)' }) }}
+            <div class="image">
+                {{ form_row(form.file, {'required': false }) }}
+                <img id="afterSelect" src="" alt="your image" />
+            </div>
         </div>
-        <button class="form__button" formonvalidate>Enregistrer</button>
+        <div class="buttons">
+            <button class="form__button" formonvalidate>Enregistrer</button>
+            <a href="{{ path( 'tool' ) }}" class="back">Annuler</a>
+        </div>
+        <input type="hidden" id="session" value="{{session}}">
         {{ form_end(form) }}
-       
-        <a href="{{ path( 'tool' ) }}" class="back">Annuler</a>
     </div>
-     
 </div>
 {% endblock %}
-
 {% block js %}
 <script src="{{asset('assets/js/rescueurlToScreen.js')}}"></script>
 <script src="{{asset('assets/js/showPictureUpload.js')}}"></script>
+<script src="{{asset('assets/js/eraseUserLogged.js')}}"></script>
 {% endblock %}

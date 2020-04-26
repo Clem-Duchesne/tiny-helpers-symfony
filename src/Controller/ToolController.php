@@ -18,6 +18,8 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
+
+
 class ToolController extends AbstractController
 {
     /**
@@ -28,7 +30,8 @@ class ToolController extends AbstractController
         return $this->render('tool/index.html.twig', [
             'categories' => $categoryRepository->findBy([], ['id' => 'DESC']),
             'tools' => $toolRepository->findBy([], ['id' => 'DESC']),
-            'users' => $userRepository->findBy([], ['id' => 'DESC'])
+            'users' => $userRepository->findBy([], ['id' => 'DESC']),
+            'category_name' => 'all'
         ]);
     }
 
@@ -37,12 +40,17 @@ class ToolController extends AbstractController
      */
     public function add(Request $request,EntityManagerInterface $em, categoryRepository $categoryRepository, toolRepository $toolRepository, Functions $functions)
     {
+       
+       
         $tool = new Tool();
         $tool->setCreatedAt( new \DateTime());
         // préparer l'objet formulaire
+        
         $form = $this->createForm(ToolType::class, $tool);
         // Récupérer (eventuellement) les données soumises
+        
         $form->handleRequest($request);
+       
         // Si le formulaire a été soumis et que les données sont valides
         if ($form->isSubmitted() && $form->isValid()) {
             
@@ -52,27 +60,10 @@ class ToolController extends AbstractController
             // this condition is needed because the 'brochure' field is not required
             // so the PDF file must be processed only when a file is uploaded
             if ($imageFile) {
-                $slugify = new Slugify();
-                $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
-                // this is needed to safely include the file name as part of the URL
-                $safeFilename = $slugify->slugify($originalFilename);
-                $newFilename = $safeFilename.'-'.uniqid().'.'.$imageFile->guessExtension();
-
-                // Move the file to the directory where brochures are stored
-                try {
-                    $imageFile->move(
-                        $this->getParameter('upload_dir'),
-                        $newFilename
-                    );
-                    $functions->redimensionner_image( $this->getParameter('upload_dir') . '/' . $newFilename, 345);
-                }
-                catch (FileException $e) {
-                    // ... handle exception if something happens during file upload
-                }
-
-                // updates the 'brochureFilename' property to store the PDF file name
-                // instead of its contents
-                $tool->setImage($newFilename);
+                $uploadDir = $this->getParameter('upload_dir');
+                    // updates the 'brochureFilename' property to store the PDF file name
+                    // instead of its contents
+                $tool->setImage($functions->addImage($imageFile, $uploadDir));
             }
             else{
                 $fileName = $form->get('name')->getData();
@@ -96,7 +87,12 @@ class ToolController extends AbstractController
                 $tool->setImage($fileName);
             }
             // enregistrer les données dans la base
+            
+           $user = $form->get('user')->getData();
+           $user[]= $this->getUser();
+           
             $tool = $form->getData();
+        
             $em->persist($tool);
             $em->flush();
             // rediriger vers l’accueil
@@ -106,7 +102,9 @@ class ToolController extends AbstractController
         return $this->render('tool/add.html.twig',
             [   'form' => $form->createView(),
                 'categories' => $categoryRepository->findBy([], ['id' => 'DESC']),
-                'tools' => $toolRepository->findBy([], ['id' => 'DESC'])
+                'tools' => $toolRepository->findBy([], ['id' => 'DESC']),
+                'session' => $this->getUser()->getId(),
+                'category_name' => 'all'
             ]
         ) ;
     }
@@ -131,27 +129,11 @@ class ToolController extends AbstractController
             // this condition is needed because the 'brochure' field is not required
             // so the PDF file must be processed only when a file is uploaded
             if ($imageFile) {
-                $slugify = new Slugify();
-                $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
-                // this is needed to safely include the file name as part of the URL
-                $safeFilename = $slugify->slugify($originalFilename);
-                $newFilename = $safeFilename.'-'.uniqid().'.'.$imageFile->guessExtension();
-
-                // Move the file to the directory where brochures are stored
-                try {
-                    $imageFile->move(
-                        $this->getParameter('upload_dir'),
-                        $newFilename
-                    );
-                    $functions->redimensionner_image( $this->getParameter('upload_dir') . '/' .$newFilename, 345);
-                }
-                catch (FileException $e) {
-                    // ... handle exception if something happens during file upload
-                }
-                // updates the 'brochureFilename' property to store the PDF file name
-                // instead of its contents
+                $uploadDir = $this->getParameter('upload_dir');
+                    // updates the 'brochureFilename' property to store the PDF file name
+                    // instead of its contents
                 $oldImage = $tool->getImage();
-                $tool->setImage($newFilename);
+                $tool->setImage($functions->addImage($imageFile, $uploadDir));
                 $functions->deleteImage($oldImage);
             }
             //dd($url . '               ' . $oldUrl);
@@ -175,6 +157,11 @@ class ToolController extends AbstractController
                 $functions->redimensionner_image( $this->getParameter('upload_dir') . '/' . $fileName, 345);
                 $tool->setImage($fileName);
             }
+            $user = $form->get('user')->getData();
+            $user[]= $this->getUser();
+           
+            $tool = $form->getData();
+            
             $this->getDoctrine()->getManager()->flush();
             return $this->redirectToRoute('tool');
         }
@@ -183,7 +170,9 @@ class ToolController extends AbstractController
             'form' => $form->createView(),
             'categories' => $categoryRepository->findBy([], ['id' => 'DESC']),
             'tools' => $toolRepository->findBy([], ['id' => 'DESC']),
-            'tool' => $tool
+            'tool' => $tool,
+            'session' => $this->getUser()->getId(),
+            'category_name' => 'all'
         ]);
     }
 
@@ -193,19 +182,28 @@ class ToolController extends AbstractController
     public function delete(Tool $tool, EntityManagerInterface $em, Functions $functions)
     {   
         $count = $tool->lengthUser();
-        $user = $this->get('security.token_storage')->getToken()->getUser();
-        if($count > 1){
-            $tool->removeUser($user);
-            $em->flush();
-            return $this->redirectToRoute('tool');
-        }
-        else{
+        $user = $this->getUser();
+        $role = $user->getRoles()[0];
+        if($role == "ROLE_ADMIN"){
             $oldImage = $tool->getImage();
             $functions->deleteImage($oldImage);
             $em->remove($tool);
             $em->flush();
             return $this->redirectToRoute('tool');
         }
-    }
-       
+        else{
+            if($count > 1){
+                $tool->removeUser($user);
+                $em->flush();
+                return $this->redirectToRoute('tool');
+            }
+            else{
+                $oldImage = $tool->getImage();
+                $functions->deleteImage($oldImage);
+                $em->remove($tool);
+                $em->flush();
+                return $this->redirectToRoute('tool');
+            }
+        }
+    }     
 }

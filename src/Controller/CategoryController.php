@@ -24,7 +24,8 @@ class CategoryController extends AbstractController
     {
         return $this->render('category/index.html.twig',[
             'categories' => $categoryRepository->findBy([], ['id' => 'DESC']),
-            'tools' => $toolRepository->findBy([], ['id' => 'DESC'])
+            'tools' => $toolRepository->findBy([], ['id' => 'DESC']),
+            'category_name' => 'all'
         ]);
     }
 
@@ -57,7 +58,8 @@ class CategoryController extends AbstractController
         return $this->render('category/add.html.twig',
             [   'form' => $form->createView(),
                 'categories' => $categoryRepository->findBy([], ['id' => 'DESC']),
-                'tools' => $toolRepository->findBy([], ['id' => 'DESC'])
+                'tools' => $toolRepository->findBy([], ['id' => 'DESC']),
+                'category_name' => 'all'
             ]
         ) ;
     }

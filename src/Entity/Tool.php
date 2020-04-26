@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -26,6 +27,10 @@ class Tool
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Url(
+     *  protocols={"https", "http"},
+     *  message = "L'url {{value}} n'est pas une URL valide"
+     * )
      */
     private $link;
 

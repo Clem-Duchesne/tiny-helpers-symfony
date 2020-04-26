@@ -1,5 +1,6 @@
-<nav class="sidebar">
-    <a class="sidebar__link" href="{{ path('index') }}">Tiny Tools {% if is_granted('ROLE_ADMIN')%} - Backoffice {% endif %}</a>
+<a class="menu"><i class="las la-bars"></i></a>
+<nav class="sidebar hide">
+    <a class="sidebar__link" href="{{ path('index') }}"><i class="las la-tools"></i>Tiny Tools {% if is_granted('ROLE_ADMIN')%} - Backoffice {% endif %}</a>
     <p class="sidebar__text">Une collection entièrement gratuite d'outils en ligne pour les développeurs...</p>
     {% if is_granted('ROLE_USER') %}
         {% if is_granted('ROLE_ADMIN') %}
@@ -8,7 +9,7 @@
         <a class="sidebar__option" href="{{ path('category') }}">Liste des catégories</a>
         {% if is_granted('ROLE_ADMIN') %}
         <a class="sidebar__option" href="{{ path('tool') }}">Liste des outils</a>
-        <a class="sidebar__option" href="{{ path('user_edit', {'id': app.user.id}) }}">Liste des catégories</a>
+        <a class="sidebar__option" href="{{ path('user_edit', {'id': app.user.id}) }}">Voir mon profil</a>
         {% else %}
         <a class="sidebar__option" href="{{ path('tool') }}">Liste de mes outils</a>
         <a class="sidebar__option" href="{{ path('user_edit', {'id': app.user.id}) }}">Voir mon profil</a>
@@ -20,9 +21,12 @@
     {% endif %}
     <h2 class="sidebar__title">Categories</h2>
     <ul class="sidebar__list">
-        <li class="sidebar__item"><a href="{{ path('index')}}">Voir tout</a><span class="sidebar__number">{{ tools|length }}</span></li>
+        <li class="sidebar__item {%if category_name == 'all' %}active{%endif%}"><a href="{{ path('index')}}" >Voir tout</a><span class="sidebar__number">{{ tools|length }}</span></li>
         {% for category in categories %}
-            <li class="sidebar__item"><a href="{{ path('index_category', {'category': category.name} ) }}">{{ category.name }}</a><span class="sidebar__number">{{ category.tool|length }}</span></li>
+            <li class="sidebar__item {%if category_name == category.name %}active{%endif%}"><a href="{{ path('index_category', {'category': category.name} ) }}">{{ category.name }}</a><span class="sidebar__number">{{ category.tool|length }}</span></li>
         {% endfor %}
     </ul>
 </nav>
+{% block js %}
+        <script src="{{asset('assets/js/menu.js')}}"></script>
+        {% endblock %}

@@ -21,12 +21,15 @@ a:hover {
   transition: 0.5s;
 }
 body {
-  display: grid;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   height: 100%;
-  grid-template-columns: 18vw 1fr;
+  
   background: #f5f7ff;
-  grid-gap: 3vw;
+
 }
+
 img {
   max-width: 100%;
 }
@@ -39,10 +42,10 @@ li {
 }
 .title {
   padding: 1.5% 1.5% 0%;
+  color: var(--blue);
+  margin-bottom: 5%;
 }
-.back {
-  margin-top: 5%;
-}
+
 
 /* width */
 ::-webkit-scrollbar {
@@ -73,13 +76,12 @@ li {
 .sidebar__link {
   font-size: 1.5rem;
   color: var(--blue);
-  margin-bottom: 20%;
+  margin-bottom: 0;
   font-weight: bold;
 }
 .sidebar__text {
-  color: var(--blue);
   font-size: 0.8rem;
-  margin: 10% 0%;
+  margin: 5% 0%;
 }
 .sidebar__option {
   color: var(--blue);
@@ -94,18 +96,19 @@ li {
   margin-left: 2%;
 }
 .sidebar__title {
-  margin: 10% 0 5% 0;
+  color: var(--blue);
+  margin: 5% 0 5% 0;
 }
 .sidebar__list {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
-  min-height: 30vh;
 }
 .sidebar__item {
   font-size: 0.9rem;
   display: flex;
   transition: 0.5s;
+  margin: 2% 0;
 }
 .sidebar__item:hover {
   color: var(--blue);
@@ -114,11 +117,22 @@ li {
 .sidebar__number {
   margin-left: auto;
 }
+.la-tools{
+  color: var(--blue);
+  font-size: 1.5rem;
+  margin-right: 1%;
+}
+.active
+{
+  background-color: white;
+  border-radius: 5px;
+  padding: 2%;
+}
 
 /* Tools */
 .tools {
   display: grid;
-
+  margin: 0 auto;
   grid-template-rows: 1fr 1fr;
   grid-column-gap: 50px;
   grid-template-columns: repeat(auto-fill, minmax(200px, 300px));
@@ -275,21 +289,22 @@ li {
 .user__github:hover {
   color: #6373ac;
 }
+.error{
+  color: red;
+}
 
 /* Formulaires */
 .form {
   display: flex;
-  justify-content: space-around;
   align-items: center;
   flex-direction: column;
   height: 80%;
 }
 .form form {
-  min-height: 50%;
-
   display: flex;
   flex-direction: column;
   justify-content: space-around;
+  min-width: 250px;
 }
 .form div {
   display: flex;
@@ -301,6 +316,7 @@ li {
 .form textarea {
   background: unset;
   border: 0;
+  font-size: 1rem;
 }
 .form input {
   border-bottom: 1px solid var(--blue);
@@ -310,18 +326,134 @@ li {
   border: 1px solid var(--blue);
 }
 .form__button {
-  margin-top: 5%;
   border: 1px solid var(--blue);
   color: var(--blue);
   padding: 3%;
+  font-size: 1em;
+}
+.back
+{
+  font-size: 1em;
+ 
+}
+.form div.buttons{
+  display: flex;
+  justify-content: space-around;
+  flex-direction: row;
+  align-items: center;
+  margin-top: 10%;
+}
+.form div.image{
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+
+input[type="file"] {
+  height: 0;
+  overflow: hidden;
+  width: 0;
+  border: none;
+}
+.file__label {
+  background: var(--blue);
+  border: none;
+  border-radius: 5px;
+  color: #fff;
+  cursor: pointer;
+  padding: 2% 1%;
+  text-align: center;
+  width: 50%;
+  margin: 5% auto;
 }
 /* File reader */
 #afterSelect {
   width: 300px;
   height: 200px;
   object-fit: cover;
+  border: 2px solid var(--blue);
+}
+#actual_img{
+  width: 300px;
+  height: 200px;
+  object-fit: cover;
+  border: 2px solid var(--blue);
 }
 
 form .hidden {
   display: none;
+}
+/**Menu */
+.menu{
+  display: flex;
+  font-size: 2rem;
+  color: var(--blue);
+  margin-right: auto;
+  position: relative;
+  z-index: 3;
+}
+.show{
+  animation: showing-menu 1s linear;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+}
+
+.hide{
+  display: none;
+}
+.overflow{
+  overflow-y: hidden;
+}
+@keyframes showing-menu{
+  0%{
+    display: flex;
+    flex-direction: column;
+    width: 0;
+  }
+  100%{
+    width: 100vw;
+  }
+}
+@keyframes hidding-menu{
+  0%{
+    width: 100vw;
+  }
+  100%{
+    width: 0;
+    display: none;
+  }
+}
+/** Media query */
+
+
+@media screen and (min-width: 740px) {
+  .sidebar__link{
+    margin-bottom: 20%;
+  }
+  .sidebar__text{
+    margin: 10% 0%;
+  }
+  body{
+    display: grid;
+    grid-template-rows: 1fr;
+    grid-template-columns: 250px 1fr;
+    grid-gap: 3vw;
+  }
+  .menu{
+    display: none;
+  }
+  .tools{
+    margin: 0;
+  }
+  .hide{
+    display:flex;
+    flex-direction: column;
+    margin-bottom: auto;
+  }
+  .title{
+    margin-bottom: 2%;
+  }
 }
