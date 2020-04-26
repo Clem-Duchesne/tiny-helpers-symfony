@@ -28,7 +28,7 @@ class CategoryRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('c')
             ->andWhere('c.exampleField = :val')
             ->setParameter('val', $value)
-            ->orderBy('c.id', 'ASC')
+            ->orderBy('c.name', 'ASC')
             ->setMaxResults(10)
             ->getQuery()
             ->getResult()

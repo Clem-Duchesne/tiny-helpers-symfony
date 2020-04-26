@@ -5,13 +5,13 @@
 {% block body %}
 <div class="tools">
 {%if category_name == 'all'%}
-    {% for tool in tools %}
+    {% for tool in tools | sortbyfield('name') %}
             <figure class="tools__tool tool">
                 <img src="{{ asset('assets/img/'~ tool.image) }}" class="tool__image">
                 <figcaption class="tool__informations">
                     <h2>{{ tool.name }}</h2>
                     <ul class="tool__tagsList">
-                        {% for category in tool.category %}
+                        {% for category in tool.category | sortbyfield('name') %}
                             <li class="tool__tag">{{ category }}</li>
                         {% endfor %}
                     </ul>
@@ -37,7 +37,7 @@
     {% endfor %}
 
 {%else%}
-    {% for tool in tools %}
+    {% for tool in tools | sortbyfield('name') %}
     
         {% for category in tool.category %}
         {%if category == category_name %}
@@ -46,7 +46,7 @@
             <figcaption class="tool__informations">
                 <h2>{{ tool.name }}</h2>
                 <ul class="tool__tagsList">
-                    {% for category in tool.category %}
+                    {% for category in tool.category | sortbyfield('name') %}
                         <li class="tool__tag">{{ category }}</li>
                     {% endfor %}
                 </ul>

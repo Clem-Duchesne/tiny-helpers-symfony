@@ -24,7 +24,7 @@ class HomeController extends AbstractController
        $category = 'all';
         return $this->render('home/index.html.twig', 
         [
-            'categories' => $categoryRepository->findBy([], ['id' => 'DESC']),
+            'categories' => $categoryRepository->findBy([]),
             'tools' => $toolRepository->findBy([], ['id' => 'DESC']),
             'category_name' => $category,
             'users' => $userRepository->findBy([], ['id' => 'DESC'])
@@ -39,7 +39,7 @@ class HomeController extends AbstractController
        $category = $request->get('category');
         return $this->render('home/index.html.twig', 
         [
-            'categories' => $categoryRepository->findBy([], ['id' => 'DESC']),
+            'categories' => $categoryRepository->findBy([]),
             'tools' => $toolRepository->findBy([], ['id' => 'DESC']),
             'category_name' =>$category,
             'users' => $userRepository->findBy([], ['id' => 'DESC'])

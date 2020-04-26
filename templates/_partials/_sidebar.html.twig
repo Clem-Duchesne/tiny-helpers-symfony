@@ -22,7 +22,7 @@
     <h2 class="sidebar__title">Categories</h2>
     <ul class="sidebar__list">
         <li class="sidebar__item {%if category_name == 'all' %}active{%endif%}"><a href="{{ path('index')}}" >Voir tout</a><span class="sidebar__number">{{ tools|length }}</span></li>
-        {% for category in categories %}
+        {% for category in categories | sortbyfield('name') %}
             <li class="sidebar__item {%if category_name == category.name %}active{%endif%}"><a href="{{ path('index_category', {'category': category.name} ) }}">{{ category.name }}</a><span class="sidebar__number">{{ category.tool|length }}</span></li>
         {% endfor %}
     </ul>

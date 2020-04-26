@@ -7,7 +7,7 @@
 <h1 class="category__title  title">Liste des catégories <a href="{{ path('category_add') }}"> + </a></h1>
 <div class="category">
 
-    {% for category in categories %}
+    {% for category in categories | sortbyfield('name') %}
         <div class="category__item">
             <p> {{ category.name }}</p>
             {%if is_granted('ROLE_ADMIN')%}

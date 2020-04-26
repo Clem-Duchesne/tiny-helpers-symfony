@@ -23,10 +23,9 @@ a:hover {
 body {
   display: flex;
   flex-direction: column;
-  align-items: center;
   height: 100%;
-  
   background: #f5f7ff;
+  align-items: center;
 
 }
 
@@ -443,6 +442,7 @@ form .hidden {
     grid-template-rows: 1fr;
     grid-template-columns: 250px 1fr;
     grid-gap: 3vw;
+    align-items: flex-start;
   }
   .menu{
     display: none;
@@ -457,5 +457,8 @@ form .hidden {
   }
   .title{
     margin-bottom: 2%;
+  }
+  .sidebar{
+    height: 100%;
   }
 }

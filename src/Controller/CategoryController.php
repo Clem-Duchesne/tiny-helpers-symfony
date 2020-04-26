@@ -57,7 +57,7 @@ class CategoryController extends AbstractController
         // formulaire non valide ou 1er acces : afficher le formulaire
         return $this->render('category/add.html.twig',
             [   'form' => $form->createView(),
-                'categories' => $categoryRepository->findBy([], ['id' => 'DESC']),
+                'categories' => $categoryRepository->findAll(),
                 'tools' => $toolRepository->findBy([], ['id' => 'DESC']),
                 'category_name' => 'all'
             ]

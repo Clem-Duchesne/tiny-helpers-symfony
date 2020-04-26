@@ -7,7 +7,7 @@
 {% if is_granted('ROLE_ADMIN') %}
     <h1 class="title">Liste des outils <a href="{{ path('tool_add') }}"> + </a></h1>
     <div class="myTools__tools">
-    {% for tool in tools %}
+    {% for tool in tools | sortbyfield('name') %}
             <figure class="tools__tool tool">
                 <img src="{{ asset('assets/img/'~ tool.image) }}" class="tool__image">
                 <figcaption class="tool__informations">

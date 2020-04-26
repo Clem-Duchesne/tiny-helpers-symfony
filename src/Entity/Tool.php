@@ -46,6 +46,7 @@ class Tool
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Category", inversedBy="tool")
+     * @ORM\OrderBy({"name" = "ASC"})
      */
     private $category;
 
