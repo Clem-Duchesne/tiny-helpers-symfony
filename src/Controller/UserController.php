@@ -32,9 +32,9 @@ class UserController extends AbstractController
     public function index(UserRepository $userRepository, categoryRepository $categoryRepository, toolRepository $toolRepository)
     {
         return $this->render('user/index.html.twig', [
-            'users' => $userRepository->findBy([], ['id' => 'DESC']),
-            'categories' => $categoryRepository->findBy([], ['id' => 'DESC']),
-            'tools' => $toolRepository->findBy([], ['id' => 'DESC']),
+            'users' => $userRepository->findAll(),
+            'categories' => $categoryRepository->findAll(),
+            'tools' => $toolRepository->findAll(),
             'category_name' => 'all'
         ]);
     }
@@ -88,8 +88,8 @@ class UserController extends AbstractController
         }
         return $this->render('security/add.html.twig', [
             'form' => $form->createView(),
-            'categories' => $categoryRepository->findBy([], ['id' => 'DESC']),
-            'tools' => $toolRepository->findBy([], ['id' => 'DESC']),
+            'categories' => $categoryRepository->findAll(),
+            'tools' => $toolRepository->findAll(),
             'message' => $message,
             'category_name' => 'all'
         ]);
@@ -136,8 +136,8 @@ class UserController extends AbstractController
 
         return $this->render('user/edit.html.twig', [
             'form' => $form->createView(),
-            'categories' => $categoryRepository->findBy([], ['id' => 'DESC']),
-            'tools' => $toolRepository->findBy([], ['id' => 'DESC']),
+            'categories' => $categoryRepository->findAll(),
+            'tools' => $toolRepository->findAll(),
             'user' => $user,
             'category_name' => 'all'
         ]);

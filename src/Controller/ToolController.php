@@ -28,9 +28,9 @@ class ToolController extends AbstractController
     public function index(categoryRepository $categoryRepository, toolRepository $toolRepository, userRepository $userRepository)
     {
         return $this->render('tool/index.html.twig', [
-            'categories' => $categoryRepository->findBy([], ['id' => 'DESC']),
-            'tools' => $toolRepository->findBy([], ['id' => 'DESC']),
-            'users' => $userRepository->findBy([], ['id' => 'DESC']),
+            'categories' => $categoryRepository->findAll(),
+            'tools' => $toolRepository->findAll(),
+            'users' => $userRepository->findAll(),
             'category_name' => 'all'
         ]);
     }
@@ -101,8 +101,8 @@ class ToolController extends AbstractController
         // formulaire non valide ou 1er acces : afficher le formulaire
         return $this->render('tool/add.html.twig',
             [   'form' => $form->createView(),
-                'categories' => $categoryRepository->findBy([], ['id' => 'DESC']),
-                'tools' => $toolRepository->findBy([], ['id' => 'DESC']),
+                'categories' => $categoryRepository->findAll(),
+                'tools' => $toolRepository->findAll(),
                 'session' => $this->getUser()->getId(),
                 'category_name' => 'all'
             ]
@@ -168,8 +168,8 @@ class ToolController extends AbstractController
 
         return $this->render('tool/edit.html.twig', [
             'form' => $form->createView(),
-            'categories' => $categoryRepository->findBy([], ['id' => 'DESC']),
-            'tools' => $toolRepository->findBy([], ['id' => 'DESC']),
+            'categories' => $categoryRepository->findAll(),
+            'tools' => $toolRepository->findAll(),
             'tool' => $tool,
             'session' => $this->getUser()->getId(),
             'category_name' => 'all'

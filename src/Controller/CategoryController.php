@@ -58,7 +58,7 @@ class CategoryController extends AbstractController
         return $this->render('category/add.html.twig',
             [   'form' => $form->createView(),
                 'categories' => $categoryRepository->findAll(),
-                'tools' => $toolRepository->findBy([], ['id' => 'DESC']),
+                'tools' => $toolRepository->findAll(),
                 'category_name' => 'all'
             ]
         ) ;
